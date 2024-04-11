@@ -4,12 +4,11 @@ import './App.css';
 import GassPump from './GassPump';
 import { Typography, Container, Box } from '@mui/material';
 
-
 function App() {
 
-// const handlePump = {
+  // const handlePump = {
 
-// }
+  // }
 
   return (
     <div className="App">
@@ -17,26 +16,37 @@ function App() {
         <Typography variant='h2' sx={{ m: 1 }}>
           Gassed Up
         </Typography>
-        <Box width={200} sx={{ border: '4px solid black', display: 'flex', flexDirection: 'column', flexWrap: 'wrap', justifyContent: 'center', width: 900, height: 300 }}>
-          <Typography variant='h6'>
-            <div>
-              1. Connect Wallet
-            </div>
-            <div>
-              2. Submit Amount
-            </div>
-            <div>
-              3. Select Grade
-            </div>
-            <div>
-              4. Press START button to begin pumping
-            </div>
-            <div>
-              5. Press STOP button to finish pumping
-            </div>
-            <div>
-              6. Press FINISH button to complerte transaction
-            </div>
+        <Box width={400} sx={{
+            border: '2px solid black',
+            color: '#666666',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            padding: '0.25rem',
+            textAlign: 'left',
+          }}>
+          <Typography>
+            <ol>
+              <li>
+                Connect Wallet
+              </li>
+              <li>
+                Submit Amount
+              </li>
+              <li>
+                Select Grade
+              </li>
+              <li>
+                Press START button to begin pumping
+              </li>
+              <li>
+                Press STOP button to finish pumping
+              </li>
+              <li>
+                Press FINISH button to complete transaction
+              </li>
+            </ol>
           </Typography>
         </Box>
         <GassPump/>
