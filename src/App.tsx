@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import GassPump from './GassPump';
-import { Typography, Container, TextField, Box } from '@mui/material';
+import { Typography, Container, Box } from '@mui/material';
 
 
 function App() {
@@ -13,11 +13,11 @@ function App() {
 
   return (
     <div className="App">
-      <Container sx={{ border: '2px solid grey', display: 'flex', flexDirection: 'column', justifyContent: 'center'  }}>
+      <Container sx={{ border: '6px solid black', display: 'flex', flexDirection: 'column', justifyContent: 'center'  }}>
         <Typography variant='h2' sx={{ m: 1 }}>
           Gassed Up
         </Typography>
-        <Box width={200} sx={{ border: '2px solid black', display: 'flex', flexDirection: 'column', flexWrap: 'wrap', justifyContent: 'center', width: 900, height: 300 }}>
+        <Box width={200} sx={{ border: '4px solid black', display: 'flex', flexDirection: 'column', flexWrap: 'wrap', justifyContent: 'center', width: 900, height: 300 }}>
           <Typography variant='h6'>
             <div>
               1. Connect Wallet

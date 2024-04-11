@@ -6,7 +6,7 @@ function GassPump() {
 
     const [gallons, setGallons] = useState<number>(0)
     const [octainPrice, setOctainPrice] = useState<number>(0)
-    const [totalPrice, setTotalPrice] = useState()
+    const [totalPrice, setTotalPrice] = useState<number>(0)
     const [isPumping, setIsPumping] = useState(false)
 
 
@@ -21,8 +21,10 @@ function GassPump() {
 
         if (isPumping) {
             interval = setInterval(() => {
-                setGallons((gallons: number) => gallons + 10);
+                console.log(gallons)
+                setGallons((gallons: number) => gallons + 1);
             }, 1000); // 1000 ms = 1 second
+
         } else if (!isPumping && interval) {
             clearInterval(interval)
         }
@@ -32,7 +34,14 @@ function GassPump() {
             }
         };
 
+
+
     }, [isPumping])
+
+    useEffect(() => {
+        let total = gallons * octainPrice
+        setTotalPrice(total)
+    }, [gallons])
 
 
     function startPump() {
@@ -54,7 +63,7 @@ function GassPump() {
                 </Box>
                 <Box sx={{ border: '2px solid black', display: 'flex',  p: 1, m: 1,  }}>
                     <Typography>
-                        {`Total Price Satoshis: ${totalPrice}`}
+                        {`Total Price: ${totalPrice} Satoshis`}
                     </Typography>
                 </Box>
             </Container>
@@ -64,7 +73,7 @@ function GassPump() {
                 <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 3, m: 3, width: 200, height: 260 }}>
                     <Box sx={{ border: '2px solid black'}}>
                         <Typography variant='h5'sx={{ p: 2}}>
-                            Price: 100 Sats
+                            Price: 10 Sats
                         </Typography>
                     </Box>
                     <Typography variant='h3'sx={{ p: 2}}>
@@ -73,14 +82,14 @@ function GassPump() {
                     <Typography variant='h3'>
                         87
                     </Typography>
-                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }} onClick={() => setPrice(100)}>Select</Button>
+                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }} onClick={() => setPrice(10)}>Select</Button>
                 </Box>
 
 
                 <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 3, m: 3, width: 200, height: 260 }}>
                     <Box sx={{ border: '2px solid black'}}>
                         <Typography variant='h5'sx={{ p: 2}}>
-                            Price: 200 Sats
+                            Price: 15 Sats
                         </Typography>
                     </Box>
                     <Typography variant='h3'sx={{ p: 2}}>
@@ -89,14 +98,14 @@ function GassPump() {
                     <Typography variant='h3'>
                         89
                     </Typography>
-                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }} onClick={() => setPrice(200)}>Select</Button>
+                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }} onClick={() => setPrice(15)}>Select</Button>
                 </Box>
 
 
                 <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 3, m: 3, width: 200, height: 260 }}>
                     <Box sx={{ border: '2px solid black'}}>
                         <Typography variant='h5'sx={{ p: 2}}>
-                            Price: 300 Sats
+                            Price: 20 Sats
                         </Typography>
                     </Box>
                     <Typography variant='h3'sx={{ p: 2}}>
@@ -105,7 +114,7 @@ function GassPump() {
                     <Typography variant='h3'>
                         93
                     </Typography>
-                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }} onClick={() => setPrice(300)}>Select</Button>
+                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }} onClick={() => setPrice(20)}>Select</Button>
                 </Box>
             </Container>
             <Container>
