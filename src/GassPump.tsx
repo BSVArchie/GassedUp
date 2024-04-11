@@ -8,8 +8,7 @@ function GassPump() {
     const [octainPrice, setOctainPrice] = useState<number>(0)
     const [totalPrice, setTotalPrice] = useState<number>(0)
     const [isPumping, setIsPumping] = useState(false)
-
-
+    const [areButtonsDisabled, disableButtons] = useState(false)
 
     function setPrice(price: number) {
         setOctainPrice(price)
@@ -20,14 +19,19 @@ function GassPump() {
         let interval: NodeJS.Timeout | null=null
 
         if (isPumping) {
-            interval = setInterval(() => {
-                console.log(gallons)
-                setGallons((gallons: number) => gallons + 1);
-            }, 1000); // 1000 ms = 1 second
-
+          interval = setInterval(() => {
+            setGallons((gallons: number) => gallons + 1);
+          }, 100); // 1000 ms = 1 second
         } else if (!isPumping && interval) {
-            clearInterval(interval)
+          clearInterval(interval)
         }
+
+        if (isPumping) {
+          disableButtons(true)
+        } else {
+          disableButtons(false)
+        }
+
         return () => {
             if (interval) {
                 clearInterval(interval);
@@ -35,14 +39,12 @@ function GassPump() {
         };
 
 
-
     }, [isPumping])
 
     useEffect(() => {
-        let total = gallons * octainPrice
-        setTotalPrice(total)
+      let total = gallons * octainPrice
+      setTotalPrice(total)
     }, [gallons])
-
 
     function startPump() {
         setIsPumping(true)
@@ -56,6 +58,11 @@ function GassPump() {
     return (
         <>
             <Container sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', flexWrap: 'wrap', width: '66%' }}>
+                <Box sx={{ border: '2px solid black', display: 'flex',  p: 1, m: 1,  }}>
+                    <Typography>
+                        {`Octain price: ${octainPrice}`}
+                    </Typography>
+                </Box>
                 <Box sx={{ border: '2px solid black', display: 'flex',  p: 1, m: 1,  }}>
                     <Typography>
                         {`Total Gallons: ${gallons}`}
@@ -82,7 +89,11 @@ function GassPump() {
                     <Typography variant='h3'>
                         87
                     </Typography>
-                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }} onClick={() => setPrice(10)}>Select</Button>
+                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }}
+                      disabled={areButtonsDisabled}
+                      onClick={() => setPrice(10)}>
+                        Select
+                    </Button>
                 </Box>
 
 
@@ -98,7 +109,11 @@ function GassPump() {
                     <Typography variant='h3'>
                         89
                     </Typography>
-                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }} onClick={() => setPrice(15)}>Select</Button>
+                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }}
+                      disabled={areButtonsDisabled}
+                      onClick={() => setPrice(15)}>
+                        Select
+                    </Button>
                 </Box>
 
 
@@ -114,7 +129,11 @@ function GassPump() {
                     <Typography variant='h3'>
                         93
                     </Typography>
-                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }} onClick={() => setPrice(20)}>Select</Button>
+                    <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }}
+                      disabled={areButtonsDisabled}
+                      onClick={() => setPrice(20)}>
+                        Select
+                    </Button>
                 </Box>
             </Container>
             <Container>
