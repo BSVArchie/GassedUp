@@ -2,42 +2,55 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import GassPump from './GassPump';
-import { Typography, Container, Box } from '@mui/material';
-
+import MainScreen from './MainScreen'
+import { Typography, Container, Box, Button } from '@mui/material';
 
 function App() {
 
-// const handlePump = {
+  // const handlePump = {
 
-// }
+  // }
 
   return (
     <div className="App">
-      <Container sx={{ border: '6px solid black', display: 'flex', flexDirection: 'column', justifyContent: 'center'  }}>
+      <Container sx={{ border: '6px solid black', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Typography variant='h2' sx={{ m: 1 }}>
           Gassed Up
         </Typography>
-        <Box width={200} sx={{ border: '4px solid black', display: 'flex', flexDirection: 'column', flexWrap: 'wrap', justifyContent: 'center', width: 900, height: 300 }}>
-          <Typography variant='h6'>
-            <div>
-              1. Connect Wallet
-            </div>
-            <div>
-              2. Submit Amount
-            </div>
-            <div>
-              3. Select Grade
-            </div>
-            <div>
-              4. Press START button to begin pumping
-            </div>
-            <div>
-              5. Press STOP button to finish pumping
-            </div>
-            <div>
-              6. Press FINISH button to complerte transaction
-            </div>
+        <Box width='80%' sx={{
+            border: '3px solid black',
+            color: '#666666',
+            display: 'flex',
+            // flexDirection: 'column',
+            // flexWrap: 'wrap',
+            justifyContent: 'center',
+            padding: '0.25rem',
+            textAlign: 'left',
+            m: 'auto',
+          }}>
+          <Typography>
+            <ol>
+              <li>
+                Connect Wallet/Select Bitcoin
+              </li>
+              <li>
+                Submit Amount
+              </li>
+              <li>
+                Select Grade
+              </li>
+              <li>
+                Press START button to begin pumping
+              </li>
+              <li>
+                Press STOP button to finish pumping
+              </li>
+              <li>
+                Press FINISH button to complete transaction
+              </li>
+            </ol>
           </Typography>
+          <MainScreen/>
         </Box>
         <GassPump/>
       </Container>
