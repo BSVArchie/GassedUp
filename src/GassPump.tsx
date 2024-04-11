@@ -33,9 +33,6 @@ function GassPump() {
                 clearInterval(interval);
             }
         };
-
-
-
     }, [isPumping])
 
     useEffect(() => {
@@ -67,6 +64,8 @@ function GassPump() {
                     </Typography>
                 </Box>
             </Container>
+
+            
             <Container sx={{ justifyContent: 'center', display: 'flex', p: .03 }}>
 
 
@@ -117,6 +116,8 @@ function GassPump() {
                     <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }} onClick={() => setPrice(20)}>Select</Button>
                 </Box>
             </Container>
+
+
             <Container>
                 <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => startPump()}>Start</Button>
                 <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'red', "&:hover": { bgcolor: 'red' } }} onClick={() => stopPump()}>Stop</Button>
