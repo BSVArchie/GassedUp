@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import GassPump from './GassPump';
-import MainScreen from './MainScreen'
+import SetDeploy from './SetDeploy'
 import { Typography, Container, Box, Button } from '@mui/material';
 
 function App() {
@@ -10,6 +10,14 @@ function App() {
   // const handlePump = {
 
   // }
+
+  function handleCash() {
+    alert('Bitcoin is more convenient, try it out!!')
+  }
+
+  function handleCard() {
+    alert('Trusted third parties are expensive, try Bitcoin!!')
+  }
 
   return (
     <div className="App">
@@ -50,7 +58,12 @@ function App() {
               </li>
             </ol>
           </Typography>
-          <MainScreen/>
+          <Container sx={{ width: '30%', display: 'flex', flexDirection: 'column'}}>
+            <Button variant="contained" sx={{ m: 1, bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => handleCash()}>$ Cash</Button>
+            <Button variant="contained" sx={{ m: 1 }} onClick={() => handleCard()}>Visa</Button>
+            <SetDeploy/>
+            {/* <Button variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }} onClick={() => SetDeploy()}>Bitcoin</Button> */}
+          </Container>
         </Box>
         <GassPump/>
       </Container>
