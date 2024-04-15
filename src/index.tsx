@@ -4,6 +4,18 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { Scrypt, bsv } from 'scrypt-ts'
+import { GassedupApp } from './contracts/gassedupApp';
+import artifact from '../artifacts/gassedupApp.json'
+
+GassedupApp.loadArtifact(artifact)
+
+Scrypt.init({
+  apiKey: process.env.REACT_APP_API_KEY || '',
+  network: bsv.Networks.testnet
+
+})
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

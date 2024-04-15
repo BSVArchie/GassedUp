@@ -1,32 +1,36 @@
+import { Address } from 'cluster';
 import {
     method,
     prop,
     SmartContract,
     hash256,
     assert,
-    SigHash
+    SigHash,
+    Addr,
+    Utils,
+    toByteString,
 } from 'scrypt-ts'
 
-import type {ByteString} from 'scrypt-ts';
+import type {ByteString, PubKeyHash} from 'scrypt-ts';
 
 export class GassedupApp extends SmartContract {
-    @prop(true)
-    count: bigint
+    @prop()
+    readonly buyerAddr: PubKeyHash
 
-    constructor(count: bigint) {
-        super(count)
-        this.count = count
+    @prop()
+    readonly gasstationAddr: Addr
+
+    constructor(buyerAddr: PubKeyHash, gasstationAddr: Addr) {
+        super(...arguments)
+        this.buyerAddr = buyerAddr
+        this.gasstationAddr = gasstationAddr
     }
 
-    @method(SigHash.SINGLE)
-    public increment() {
-        this.count++
-
-        // make sure balance in the contract does not change
-        const amount: bigint = this.ctx.utxo.value
-        // output containing the latest state
-        const output: ByteString = this.buildStateOutput(amount)
-        // verify current tx has this single output
-        assert(this.ctx.hashOutputs === hash256(output), 'hashOutputs mismatch')
+    @method(SigHash.ANYONECANPAY_SINGLE)
+    public completeTransaction(totalPrice: bigint, buyerChange: bigint) {
+        let outputs = this.buildStateOutput(this.ctx.utxo.value)
+        outputs += Utils.buildPublicKeyHashOutput(this.gasstationAddr, totalPrice)
+        outputs += Utils.buildPublicKeyHashOutput(this.buyerAddr, buyerChange)
+        assert(this.ctx.hashOutputs === hash256(outputs), 'hashOutputs mismatch')
     }
 }

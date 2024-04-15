@@ -1,22 +1,84 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
 import GassPump from './GassPump';
-import SetDeploy from './SetDeploy'
-import { Typography, Container, Box, Button } from '@mui/material';
+// import QRCode from 'qrcode.react';
+import {
+  Typography,
+  Container,
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  TextField
+} from '@mui/material';
+import { pubKey2Addr, PubKey, DefaultProvider, bsv, PandaSigner, hash160 } from 'scrypt-ts';
+import { GassedupApp } from './contracts/gassedupApp'
 
-function App() {
+const App: React.FC = () => {
 
-  // const handlePump = {
+  const [open, setOpen] = useState(false)
+  const [amount, setAmount] = useState(0)
+  const [currentTxId, setCurrentTxId] = useState('')
 
-  // }
 
   function handleCash() {
-    alert('Bitcoin is more convenient, try it out!!')
+    alert('Bitcoin (electronic cash) is more convenient, try it out!!')
   }
+
 
   function handleCard() {
     alert('Trusted third parties are expensive, try Bitcoin!!')
+  }
+
+
+  const openModel = async () => {
+
+      const provider = new DefaultProvider({
+          network: bsv.Networks.testnet
+      })
+
+      const signer = new PandaSigner(provider)
+
+      const { isAuthenticated, error } = await signer.requestAuth()
+
+      if (!isAuthenticated) {
+          alert(error)
+      } else {
+          // const connectedAddr = hash160((await signer.getDefaultPubKey()).toHex())
+          setOpen(true)
+      }
+  }
+
+
+  const deployContract = async () => {
+
+      const provider = new DefaultProvider({
+          network: bsv.Networks.testnet
+      })
+
+      const signer = new PandaSigner(provider)
+      const connectedAddr = hash160((await signer.getDefaultPubKey()).toHex())
+      const gasstationAddr = pubKey2Addr(PubKey('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7b9'))
+      const instance = new GassedupApp(connectedAddr, gasstationAddr)
+
+      await instance.connect(signer)
+
+      try {
+          const deployTx = await instance.deploy(amount)
+          setCurrentTxId(deployTx.id)
+      } catch (error) {
+          console.log(error)
+      }
+      setOpen(false)
+      alert('Prepaid amount: ' + amount)
+      console.log(currentTxId)
+  }
+
+
+  const cancel = () => {
+      setOpen(false)
   }
 
   return (
@@ -36,7 +98,7 @@ function App() {
             textAlign: 'left',
             m: 'auto',
           }}>
-          <Typography>
+          <Box>
             <ol>
               <li>
                 Connect Wallet/Select Bitcoin
@@ -57,15 +119,37 @@ function App() {
                 Press FINISH button to complete transaction
               </li>
             </ol>
-          </Typography>
+          </Box>
           <Container sx={{ width: '30%', display: 'flex', flexDirection: 'column'}}>
             <Button variant="contained" sx={{ m: 1, bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => handleCash()}>$ Cash</Button>
             <Button variant="contained" sx={{ m: 1 }} onClick={() => handleCard()}>Visa</Button>
-            <SetDeploy/>
-            {/* <Button variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }} onClick={() => SetDeploy()}>Bitcoin</Button> */}
+
+            <Button onClick = {openModel} variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }} >Bitcoin</Button>
+            {/* <p>{currentTxId}</p> */}
+
+            <Dialog open={open} fullWidth>
+                <DialogTitle>Enter Amount</DialogTitle>
+                <DialogContent>
+                    <TextField onChange = { e => setAmount(Number(e.target.value))} label="Satoshis"></TextField>
+                </DialogContent>
+                    {/* <Box textAlign="center" mb={4}>
+                        <Typography>
+                        Please scan the QR code below to make a payment of amount BSV to the following address:
+                        </Typography>
+                        <Typography variant="subtitle1">{arbiterAddr}</Typography>
+                    </Box>
+                    <Box onChange={handleAmount} display="flex" justifyContent="center">
+                        <QRCode value={`bitcoin:${arbiterAddr}?amount=${amount}&message=Please%20provide%20your%20address`} size={256} />
+                    </Box> */}
+                <DialogActions>
+                    <Button onClick = {deployContract} color='success' variant='contained'>Deploy</Button>
+                    <Button onClick = {cancel} color='error' variant='contained'>Cancel</Button>
+                </DialogActions>
+            </Dialog>
           </Container>
         </Box>
-        <GassPump/>
+        {/* <GassPump/> */}
+        <GassPump currentTxId={currentTxId} amount={amount}/>
       </Container>
     </div>
   );

@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
 import { TextField, Box, Button, Container, Typography } from '@mui/material';
+import { PandaSigner, DefaultProvider, ScryptProvider, toByteString, sha256, bsv, MethodCallOptions } from 'scrypt-ts';
+import { GassedupApp } from './contracts/gassedupApp';
+// import { MethodCallOptions } from 'scrypt-ts'
 
-function GassPump() {
+interface GassPumpProps {
+    currentTxId: string
+    amount: number
+}
+
+const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
 
     const [gallons, setGallons] = useState<number>(0)
     const [octainPrice, setOctainPrice] = useState<number>(0)
@@ -19,7 +27,7 @@ function GassPump() {
 
         if (isPumping) {
           interval = setInterval(() => {
-            setGallons((gallons: number) => gallons + 1);
+            setGallons((gallons: number) => Math.round((gallons + .10)*100)/100);
           }, 100); // 1000 ms = 1 second
         } else if (!isPumping && interval) {
           clearInterval(interval)
@@ -36,22 +44,57 @@ function GassPump() {
                 clearInterval(interval);
             }
         };
-
-
     }, [isPumping])
 
     useEffect(() => {
-      let total = gallons * octainPrice
+      let total = (gallons + 1) * octainPrice
+      if (total >= amount) {
+        setIsPumping(false)
+      }
       setTotalPrice(total)
     }, [gallons])
 
     function startPump() {
+        if(!currentTxId) {
+            alert('Prepay is required, please deposit Bitcoin')
+        } else if(octainPrice == 0) {
+            alert('Please select Octain')
+        } else if (currentTxId && octainPrice > 0)
         setIsPumping(true)
     }
 
     function stopPump() {
         setIsPumping(false)
         console.log('stop pump', isPumping)
+    }
+
+    const callComplete = async () => {
+        const provider = new DefaultProvider({
+            network: bsv.Networks.testnet
+          })
+
+        const signer = new PandaSigner(provider)
+
+        const atOutputIndex = 0
+
+        const tx = await signer.connectedProvider.getTransaction(currentTxId)
+
+        const instance = GassedupApp.fromTx(tx, atOutputIndex)
+        console.log(instance)
+        // await instance.connect(signer)
+
+        // const nextInstance = instance.next()
+
+        // const buyerChange = amount - totalPrice
+
+        // try {
+        //     const { tx: callTx } = await nextInstance.methods.completeTransaction(totalPrice, buyerChange)
+        //     alert(`Tranaction complete. Purchase amount: ${totalPrice}, Change amount: ${buyerChange}`)
+        //     console.log(callTx.id)
+        // } catch(error) {
+        //     alert(error)
+        // }
+
     }
 
     return (
@@ -142,7 +185,7 @@ function GassPump() {
             <Container>
                 <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => startPump()}>Start</Button>
                 <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'red', "&:hover": { bgcolor: 'red' } }} onClick={() => stopPump()}>Stop</Button>
-                <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'grey', "&:hover": { bgcolor: 'grey' } }} >Complete</Button>
+                <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'grey', "&:hover": { bgcolor: 'grey' } }}  onClick={() => callComplete()}>Complete</Button>
             </Container>
 
 
