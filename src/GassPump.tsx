@@ -81,19 +81,19 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
 
         const instance = GassedupApp.fromTx(tx, atOutputIndex)
         console.log(instance)
-        // await instance.connect(signer)
+        await instance.connect(signer)
 
         // const nextInstance = instance.next()
 
-        // const buyerChange = amount - totalPrice
+        const buyerChange = amount - totalPrice
 
-        // try {
-        //     const { tx: callTx } = await nextInstance.methods.completeTransaction(totalPrice, buyerChange)
-        //     alert(`Tranaction complete. Purchase amount: ${totalPrice}, Change amount: ${buyerChange}`)
-        //     console.log(callTx.id)
-        // } catch(error) {
-        //     alert(error)
-        // }
+        try {
+            const { tx: callTx } = await instance.methods.completeTransaction(totalPrice, buyerChange)
+            alert(`Tranaction complete. Purchase amount: ${totalPrice}, Change amount: ${buyerChange}`)
+            console.log(callTx.id)
+        } catch(error) {
+            alert(error)
+        }
 
     }
 

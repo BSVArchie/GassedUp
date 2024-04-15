@@ -8,10 +8,8 @@ import {
     SigHash,
     Addr,
     Utils,
-    toByteString,
+    PubKeyHash,
 } from 'scrypt-ts'
-
-import type {ByteString, PubKeyHash} from 'scrypt-ts';
 
 export class GassedupApp extends SmartContract {
     @prop()
