@@ -26,8 +26,7 @@ export class GassedupApp extends SmartContract {
 
     @method(SigHash.ANYONECANPAY_SINGLE)
     public completeTransaction(totalPrice: bigint, buyerChange: bigint) {
-        let outputs = this.buildStateOutput(this.ctx.utxo.value)
-        outputs += Utils.buildPublicKeyHashOutput(this.gasstationAddr, totalPrice)
+        let outputs = Utils.buildPublicKeyHashOutput(this.gasstationAddr, totalPrice)
         outputs += Utils.buildPublicKeyHashOutput(this.buyerAddr, buyerChange)
         assert(this.ctx.hashOutputs === hash256(outputs), 'hashOutputs mismatch')
     }
