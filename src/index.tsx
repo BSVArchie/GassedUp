@@ -10,11 +10,10 @@ import artifact from '../artifacts/gassedupApp.json'
 
 GassedupApp.loadArtifact(artifact)
 
-Scrypt.init({
-  apiKey: process.env.REACT_APP_API_KEY || '',
-  network: bsv.Networks.testnet
-
-})
+// Scrypt.init({
+//   process.env.PRIVATE_KEY || '',
+//   network: bsv.Networks.testnet
+// })
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

@@ -19,7 +19,6 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
 
     function setPrice(price: number) {
         setOctainPrice(price)
-        console.log(octainPrice)
     }
 
     useEffect(() => {
@@ -65,34 +64,34 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
 
     function stopPump() {
         setIsPumping(false)
-        console.log('stop pump', isPumping)
     }
 
     const callComplete = async () => {
-        const provider = new DefaultProvider({
-            network: bsv.Networks.testnet
-          })
-
-        const signer = new PandaSigner(provider)
-
-        const atOutputIndex = 0
-
-        const tx = await signer.connectedProvider.getTransaction(currentTxId)
-
-        const instance = GassedupApp.fromTx(tx, atOutputIndex)
-        console.log(instance)
-        await instance.connect(signer)
-
-        // const nextInstance = instance.next()
-
-        const buyerChange = amount - totalPrice
-
         try {
-            const { tx: callTx } = await instance.methods.completeTransaction(totalPrice, buyerChange)
+            const provider = new DefaultProvider({
+                network: bsv.Networks.testnet
+            })
+
+            const signer = new PandaSigner(provider)
+
+            const atOutputIndex = 0
+
+            const tx = await signer.connectedProvider.getTransaction(currentTxId)
+
+            const instance = GassedupApp.fromTx(tx, atOutputIndex)
+            console.log(instance)
+            await instance.connect(signer)
+
+            // const nextInstance = instance.next()
+
+            const buyerChange = amount - totalPrice
+
+
+            const { tx: callTx } = await instance.methods.completeTransaction(buyerChange)
             alert(`Tranaction complete. Purchase amount: ${totalPrice}, Change amount: ${buyerChange}`)
             console.log(callTx.id)
         } catch(error) {
-            alert(error)
+            console.log(error)
         }
 
     }

@@ -13,11 +13,16 @@ import {
   DialogContent,
   TextField
 } from '@mui/material';
-import { pubKey2Addr, PubKey, DefaultProvider, bsv, PandaSigner, hash160 } from 'scrypt-ts';
+import { pubKey2Addr, PubKey, DefaultProvider, bsv, PandaSigner, hash160, PubKeyHash, toByteString, Signer, Scrypt } from 'scrypt-ts';
 import { GassedupApp } from './contracts/gassedupApp'
+// import { getDefaultSigner } from '../tests/utils/txHelper'
+import * as dotenv from 'dotenv'
+
+
 
 const App: React.FC = () => {
 
+  const [prePayState, setPrePayState] = useState(false)
   const [open, setOpen] = useState(false)
   const [amount, setAmount] = useState(0)
   const [currentTxId, setCurrentTxId] = useState('')
@@ -33,7 +38,7 @@ const App: React.FC = () => {
   }
 
 
-  const openModel = async () => {
+  const deployContract = async () => {
 
       const provider = new DefaultProvider({
           network: bsv.Networks.testnet
@@ -44,36 +49,49 @@ const App: React.FC = () => {
       const { isAuthenticated, error } = await signer.requestAuth()
 
       if (!isAuthenticated) {
-          alert(error)
+          alert(`Gass pump not connected: ${error}`)
       } else {
           // const connectedAddr = hash160((await signer.getDefaultPubKey()).toHex())
           setOpen(true)
       }
-  }
+
+      const buyerAddr = PubKeyHash(toByteString('0000000000000000000000000000000000000000'))
+      const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
+      const gassPumpAddr = PubKeyHash((await signer.getDefaultPubKey()).toHex())
 
 
-  const deployContract = async () => {
-
-      const provider = new DefaultProvider({
-          network: bsv.Networks.testnet
-      })
-
-      const signer = new PandaSigner(provider)
-      const connectedAddr = hash160((await signer.getDefaultPubKey()).toHex())
-      const gasstationAddr = pubKey2Addr(PubKey('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7b9'))
-      const instance = new GassedupApp(connectedAddr, gasstationAddr)
+      const instance = new GassedupApp(buyerAddr, gassStationAddr, gassPumpAddr, prePayState)
 
       await instance.connect(signer)
 
       try {
-          const deployTx = await instance.deploy(amount)
-          setCurrentTxId(deployTx.id)
-      } catch (error) {
-          console.log(error)
-      }
-      setOpen(false)
-      alert('Prepaid amount: ' + amount)
-      console.log(currentTxId)
+        const deployTx = await instance.deploy(1)
+        setCurrentTxId(deployTx.id)
+        alert(`Deployed Contract: ${deployTx.id}`)
+    } catch (error) {
+        console.log(error)
+    }
+
+    console.log(currentTxId)
+  }
+
+
+  const prePay = async () => {
+
+    // try {
+    //   const signer = getDefaultSigner()
+    //   // await signer.connect()
+    //   const tx = await signer.connectedProvider.getTransaction(currentTxId)
+    // } catch (error) {
+    //   console.log(error)
+    // }
+
+
+      // const buyerAddr = pubKey2Addr(PubKey('0265b58951db762e755d6f5b19eacb79dc59bd08c3692c99dfaff707c56fec54b9'))
+
+
+      // setOpen(false)
+
   }
 
 
@@ -124,8 +142,7 @@ const App: React.FC = () => {
             <Button variant="contained" sx={{ m: 1, bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => handleCash()}>$ Cash</Button>
             <Button variant="contained" sx={{ m: 1 }} onClick={() => handleCard()}>Visa</Button>
 
-            <Button onClick = {openModel} variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }} >Bitcoin</Button>
-            {/* <p>{currentTxId}</p> */}
+            <Button onClick = {deployContract} variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }} >Bitcoin</Button>
 
             <Dialog open={open} fullWidth>
                 <DialogTitle>Enter Amount</DialogTitle>
@@ -142,7 +159,7 @@ const App: React.FC = () => {
                         <QRCode value={`bitcoin:${arbiterAddr}?amount=${amount}&message=Please%20provide%20your%20address`} size={256} />
                     </Box> */}
                 <DialogActions>
-                    <Button onClick = {deployContract} color='success' variant='contained'>Deploy</Button>
+                    <Button onClick = {prePay} color='success' variant='contained'>Pre-pay</Button>
                     <Button onClick = {cancel} color='error' variant='contained'>Cancel</Button>
                 </DialogActions>
             </Dialog>
