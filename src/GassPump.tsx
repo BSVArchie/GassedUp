@@ -89,8 +89,6 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
         console.log(instance.buyerPubKey, instance.utxo, instance.utxo.satoshis)
         await instance.connect(signer)
 
-        // const changeAddress = await signer.getDefaultAddress()
-
         const nextInstance = instance.next()
 
         instance.bindTxBuilder('completeTransaction', GassedupApp.completeTxBuilder)
@@ -115,28 +113,49 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
 
     return (
         <>
-            <Container sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', flexWrap: 'wrap', width: '66%' }}>
-                <Box sx={{ border: '2px solid black', display: 'flex',  p: 1, m: 1,  }}>
-                    <Typography>
-                        {`Octain price: ${octainPrice}`}
-                    </Typography>
-                </Box>
-                <Box sx={{ border: '2px solid black', display: 'flex',  p: 1, m: 1,  }}>
-                    <Typography>
-                        {`Total Gallons: ${gallons}`}
-                    </Typography>
-                </Box>
-                <Box sx={{ border: '2px solid black', display: 'flex',  p: 1, m: 1,  }}>
-                    <Typography>
-                        {`Total Price: ${totalPrice} Satoshis`}
-                    </Typography>
-                </Box>
+            <Container sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', flexWrap: 'wrap', width: '88%' }}>
+                <Container sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', width: '66%' }}>
+                    <Box sx={{ border: '2px solid black', display: 'flex',  width: '66%', p: 1, m: 1  }}>
+                        <Typography>
+                            {'Octain price:'}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ border: '2px solid black', display: 'flex',  width: '16%', p: 1, m: 1,  }}>
+                        <Typography>
+                            {`${octainPrice} Satoshis`}
+                        </Typography>
+                    </Box>
+                </Container>
+
+                <Container sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', width: '66%' }}>
+                    <Box sx={{ border: '2px solid black', display: 'flex',  width: '66%', p: 1, m: 1  }}>
+                        <Typography>
+                            {'Total Gallons:'}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ border: '2px solid black', display: 'flex',  width: '16%', p: 1, m: 1,  }}>
+                        <Typography>
+                            {`${gallons} Gallons`}
+                        </Typography>
+                    </Box>
+                </Container>
+
+                <Container sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', width: '66%' }}>
+                    <Box sx={{ border: '2px solid black', display: 'flex',  width: '66%', p: 1, m: 1  }}>
+                        <Typography>
+                            {'Total Price: '}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ border: '2px solid black', display: 'flex', width: '16%', p: 1, m: 1,  }}>
+                        <Typography>
+                            {`${totalPrice} Satoshis`}
+                        </Typography>
+                    </Box>
+                </Container>
             </Container>
 
 
             <Container sx={{ justifyContent: 'center', display: 'flex', p: .03 }}>
-
-
                 <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
                     <Box sx={{ border: '2px solid black'}}>
                         <Typography variant='h5'sx={{ p: 2}}>
@@ -202,10 +221,7 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
                 <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => startPump()}>Start</Button>
                 <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'red', "&:hover": { bgcolor: 'red' } }} onClick={() => stopPump()}>Stop</Button>
                 <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'grey', "&:hover": { bgcolor: 'grey' } }}  onClick={() => callComplete()}>Complete</Button>
-                {/* <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'grey', "&:hover": { bgcolor: 'grey' } }}  onClick={() => checkObject()}>CheckObject</Button> */}
             </Container>
-
-
         </>
     )
 }

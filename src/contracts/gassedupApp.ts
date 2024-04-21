@@ -43,7 +43,7 @@ export class GassedupApp extends SmartContract {
     @method()
     public completeTransaction(totalPrice: bigint) {
         assert(this.ctx.utxo.value > 0, 'A minimum of 1 Satoshi is required to start pump')
-        
+
         const buyerChange: bigint = this.ctx.utxo.value - totalPrice
 
         const stationOutput: ByteString = Utils.buildPublicKeyHashOutput(this.gassStationAddr, totalPrice)
@@ -66,17 +66,9 @@ export class GassedupApp extends SmartContract {
 
         const buyerChange: number = current.balance - Number(totalPrice)
         console.log('buyerChange:', buyerChange)
-        // console.log(options.changeAddress)
 
         const unsignedTx: bsv.Transaction = new bsv.Transaction()
         .addInput(current.buildContractInput())
-
-        // .addOutput(
-        //     new bsv.Transaction.Output({
-        //         script: next.instance.lockingScript,
-        //         satoshis: Number(prePayAmount)
-        //     })
-        // )
 
         .addOutput(
             new bsv.Transaction.Output({
