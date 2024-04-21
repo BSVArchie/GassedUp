@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TextField, Box, Button, Container, Typography } from '@mui/material';
-import { PandaSigner, DefaultProvider, ScryptProvider, toByteString, sha256, bsv, MethodCallOptions, SensiletSigner } from 'scrypt-ts';
+import { PandaSigner, DefaultProvider, ScryptProvider, toByteString, sha256, bsv, MethodCallOptions, SensiletSigner, PubKey, toHex, SignatureResponse, findSig } from 'scrypt-ts';
 import { GassedupApp } from './contracts/gassedupApp';
 // import { MethodCallOptions } from 'scrypt-ts'
 
@@ -81,12 +81,14 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
             alert(`Buyer wallet not connected: ${error}`)
         }
 
+        const gassPumpPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
+
         const atOutputIndex = 0
 
         const tx = await signer.connectedProvider.getTransaction(currentTxId)
 
         const instance = GassedupApp.fromTx(tx, atOutputIndex)
-        console.log(instance.buyerPubKey, instance.utxo, instance.utxo.satoshis)
+        // console.log(instance.buyerPubKey, instance.utxo, instance.utxo.satoshis)
         await instance.connect(signer)
 
         const nextInstance = instance.next()
@@ -96,6 +98,10 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
         try {
             instance.methods.completeTransaction(
                 BigInt(totalPrice),
+                gassPumpPubKey,
+                (sigResponses: SignatureResponse[]) => {
+                    return findSig(sigResponses, bsv.PublicKey.fromString(gassPumpPubKey))
+                  },
                 {
                     next: {
                         instance: nextInstance,

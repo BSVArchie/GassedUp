@@ -30,8 +30,8 @@ export class GassedupApp extends SmartContract {
     @prop()
     readonly gassStationAddr: Addr
 
-    @prop()
-    readonly gassPumpPubKey: PubKey
+    @prop(true)
+    gassPumpPubKey: PubKey
 
     constructor(gassStationAddr: Addr, buyerPubKey: PubKey) {
         super(...arguments)
@@ -41,8 +41,9 @@ export class GassedupApp extends SmartContract {
     }
 
     @method()
-    public completeTransaction(totalPrice: bigint) {
-        assert(this.ctx.utxo.value > 0, 'A minimum of 1 Satoshi is required to start pump')
+    public completeTransaction(totalPrice: bigint, gassPumpPubKey: PubKey, sig: Sig) {
+        this.gassPumpPubKey = gassPumpPubKey
+        assert(this.checkSig(sig, this.gassPumpPubKey), `checkSig failed`)
 
         const buyerChange: bigint = this.ctx.utxo.value - totalPrice
 

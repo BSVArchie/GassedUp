@@ -1,19 +1,18 @@
 {
   "extends": "./tsconfig.json",
-  "include": [
-    "src/contracts/**/*.ts"
-  ],
   "compilerOptions": {
-    "noEmit": true,
-    "experimentalDecorators": true,
     "target": "ESNext",
     "esModuleInterop": true,
+    "experimentalDecorators": true,
     "plugins": [
       {
-        "transform": "C:\\Users\\archb\\AppData\\Local\\npm-cache\\_npx\\2c137b5e74e84b07\\node_modules\\scrypt-ts-transpiler\\dist\\index.js",
+        "transform": "C:\\Users\\archb\\AppData\\Local\\npm-cache\\_npx\\182c6278d2576da8\\node_modules\\scrypt-ts-transpiler\\dist\\index.js",
         "transformProgram": true,
         "outDir": "artifacts"
       }
     ]
-  }
+  },
+  "include": [
+    "src/contracts/**/*.ts"
+  ]
 }
