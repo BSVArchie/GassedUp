@@ -13,10 +13,9 @@ import {
   DialogContent,
   TextField
 } from '@mui/material';
-import { pubKey2Addr, PubKey, DefaultProvider, bsv, PandaSigner, SensiletSigner, hash160, PubKeyHash, toByteString, Signer, Scrypt } from 'scrypt-ts';
+import { pubKey2Addr, PubKey, DefaultProvider, bsv, PandaSigner, SensiletSigner, hash160, PubKeyHash, toByteString, Signer, Scrypt, toHex } from 'scrypt-ts';
 import { GassedupApp } from './contracts/gassedupApp'
 import * as dotenv from 'dotenv'
-
 
 
 const App: React.FC = () => {
@@ -37,12 +36,18 @@ const App: React.FC = () => {
   }
 
 
+  function openModel() {
+    setOpen(true)
+  }
+
+
   const deployContract = async () => {
 
       const provider = new DefaultProvider({
           network: bsv.Networks.testnet
       })
 
+      // const signer = new SensiletSigner(provider)
       const signer = new PandaSigner(provider)
 
       const { isAuthenticated, error } = await signer.requestAuth()
@@ -50,87 +55,92 @@ const App: React.FC = () => {
       if (!isAuthenticated) {
           alert(`Gass pump not connected: ${error}`)
       } else {
-          setOpen(true)
-      }
-
-      const buyerAddr = PubKeyHash(toByteString('0000000000000000000000000000000000000000'))
-      const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
-      const gassPumpAddr = PubKeyHash((await signer.getDefaultPubKey()).toHex())
+        // const buyerAddr = PubKeyHash(toByteString('0000000000000000000000000000000000000000'))
 
 
-      const instance = new GassedupApp(buyerAddr, gassStationAddr, gassPumpAddr)
-
-      await instance.connect(signer)
-
-      try {
-        const deployTx = await instance.deploy(1)
-        setCurrentTxId(deployTx.id)
-        alert(`Deployed Contract: ${deployTx.id}`)
-    } catch (error) {
-        console.log(error)
-    }
-
-    console.log(currentTxId)
-  }
 
 
-  const prePay = async () => {
-    const provider = new DefaultProvider({
+        const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
+        const buyerPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
+        // const gassPumbPubkey = PubKey(toHex(await signer.getDefaultPubKey()))
 
-        network: bsv.Networks.testnet
-    })
-
-    const signer = new SensiletSigner(provider)
-    console.log(signer)
-
-    const { isAuthenticated, error } = await signer.requestAuth()
-
-      if (currentTxId && isAuthenticated) {
-        if (!isAuthenticated) {
-          alert(`Purchaser wallet not connected: ${error}`)
-        }
-
-        const atOutputIndex = 0
-        const tx = await signer.connectedProvider.getTransaction(currentTxId)
-        const instance = GassedupApp.fromTx(tx, atOutputIndex)
+        const instance = new GassedupApp(gassStationAddr, buyerPubKey)
 
         await instance.connect(signer)
 
-        // const buyerSig = await signer.getSignatures
-
-
-        const nextInstance = instance.next()
-        // const buyerPubkey = await signer.getDefaultPubKey()
-        nextInstance.prePayState = true
-        nextInstance.buyerAddr = hash160((await signer.getDefaultPubKey()).toHex())
-        // const buyerAddr = pubKey2Addr(PubKey('0265b58951db762e755d6f5b19eacb79dc59bd08c3692c99dfaff707c56fec54b9'))
-
-
-        instance.bindTxBuilder('prePay', GassedupApp.prePayTxBuilder)
-
         try {
-          const { tx: callTx } = await instance.methods.prePay(
-            // buyerSig,
-            // buyerPubkey,
-            // buyerAddr,
-            BigInt(amount),
-            {
-              next: {
-                instance: nextInstance,
-                balance: instance.balance
-              },
-              changeAddress: await signer.getDefaultAddress()
-            }
-          )
-          console.log(`PrePay set for ${amount} at ${callTx.id}`)
+          instance.deploy(amount).then((result) => {
+            setCurrentTxId(result.id)
+            setOpen(false)
+            // alert(`Deployed Contract: ${result.id}`)
+            console.log(`Deployed Contract: ${result.id}`)
+          })
 
-        } catch(error) {
-          console.log(`PrePay error: ${error}`)
-        }
+        } catch (error) {
+            console.log(error)
+          }
+        console.log(currentTxId)
       }
-      setOpen(false)
   }
 
+  // const prePay = async () => {
+  //   const provider = new DefaultProvider({
+
+  //       network: bsv.Networks.testnet
+  //   })
+
+  //   // const signer = new PandaSigner(provider)
+  //   const signer = new SensiletSigner(provider)
+  //   // console.log(signer)
+
+  //   const { isAuthenticated, error } = await signer.requestAuth()
+
+  //     if (currentTxId && isAuthenticated) {
+  //       if (!isAuthenticated) {
+  //         alert(`Purchaser wallet not connected: ${error}`)
+  //       }
+
+  //       const atOutputIndex = 0
+  //       const tx = await signer.connectedProvider.getTransaction(currentTxId)
+  //       const instance = GassedupApp.fromTx(tx, atOutputIndex)
+
+  //       await instance.connect(signer)
+
+  //       // const buyerSig = await signer.getSignatures
+
+
+  //       // const nextInstance = instance.next()
+  //       // const buyerPubkey = await signer.getDefaultPubKey()
+  //       const buyerPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
+  //       // const buyerAddr = pubKey2Addr(PubKey('0265b58951db762e755d6f5b19eacb79dc59bd08c3692c99dfaff707c56fec54b9'))
+
+
+  //       // instance.bindTxBuilder('prePay', GassedupApp.prePayTxBuilder)
+
+  //       try {
+  //         const { tx: callTx } = await instance.methods.prePay(
+  //           // buyerSig,
+  //           buyerPubKey,
+  //           // BigInt(amount),
+  //           // {
+  //           //   next: {
+  //           //     instance: nextInstance,
+  //           //     balance: instance.balance
+  //           //   },
+  //           //   changeAddress: await signer.getDefaultAddress()
+  //           // }
+  //         )
+  //         console.log(`PrePay set for: ${amount}, new instance id: ${callTx.id}`)
+  //         setCurrentTxId(callTx.id)
+  //         setOpen(false)
+
+  //       } catch(error) {
+  //         // alert(`PrePay error: ${error}`)
+  //         console.log(`PrePay error: ${error}`)
+  //       }
+  //       console.log(currentTxId)
+  //     }
+  // }
 
   const cancel = () => {
       setOpen(false)
@@ -180,7 +190,7 @@ const App: React.FC = () => {
             <Button variant="contained" sx={{ m: 1, bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => handleCash()}>$ Cash</Button>
             <Button variant="contained" sx={{ m: 1 }} onClick={() => handleCard()}>Visa</Button>
 
-            <Button onClick = {deployContract} variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }} >Bitcoin</Button>
+            <Button onClick = {openModel} variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }} >Bitcoin</Button>
 
             <Dialog open={open} fullWidth>
                 <DialogTitle>Enter Amount</DialogTitle>
@@ -197,7 +207,7 @@ const App: React.FC = () => {
                         <QRCode value={`bitcoin:${arbiterAddr}?amount=${amount}&message=Please%20provide%20your%20address`} size={256} />
                     </Box> */}
                 <DialogActions>
-                    <Button onClick = {prePay} color='success' variant='contained'>Pre-pay</Button>
+                    <Button onClick = {deployContract} color='success' variant='contained'>Pre-pay</Button>
                     <Button onClick = {cancel} color='error' variant='contained'>Cancel</Button>
                 </DialogActions>
             </Dialog>

@@ -1,3 +1,4 @@
+import GassPump from 'GassPump';
 import { Address } from 'cluster';
 import {
     method,
@@ -16,70 +17,82 @@ import {
     MethodCallOptions,
     ContractTransaction,
     StatefulNext,
+    ByteString,
+    toByteString,
+    hash160,
+    toHex,
 } from 'scrypt-ts'
 
 export class GassedupApp extends SmartContract {
     @prop(true)
-    buyerAddr: Addr
+    buyerPubKey: PubKey
 
     @prop()
     readonly gassStationAddr: Addr
 
     @prop()
-    readonly gassPumpAddr: Addr
+    readonly gassPumpPubKey: PubKey
 
-    @prop(true)
-    prePayState: boolean
-
-    @prop(true)
-    prePayAmount: bigint
-
-
-    constructor(buyerAddr: Addr, gassStationAddr: Addr, gassPumpAddr: Addr) {
+    constructor(gassStationAddr: Addr, buyerPubKey: PubKey) {
         super(...arguments)
-        this.buyerAddr = buyerAddr
+        this.buyerPubKey = buyerPubKey
         this.gassStationAddr = gassStationAddr
-        this.gassPumpAddr = gassPumpAddr
-        this.prePayState = false
-        this.prePayAmount = BigInt(0)
+        this.gassPumpPubKey = PubKey(toByteString('0000000000000000000000000000000000000000'))
     }
 
     @method()
-    // SigHash.ANYONECANPAY_SINGLE
-    // public prePay(buyerSig: Sig, buyerPubkey: PubKey, prePayAmount: bigint) {
-    public prePay(prePayAmount: bigint) {
-        // assert(this.checkSig(buyerSig, buyerPubkey), 'buyer signature check failed')
-        // this.buyerAddr = pubKey2Addr(buyerPubkey)
-        assert(prePayAmount > 0, 'A minimum of 1 Satoshi is required to start pump')
+    public completeTransaction(totalPrice: bigint) {
+        assert(this.ctx.utxo.value > 0, 'A minimum of 1 Satoshi is required to start pump')
+        
+        const buyerChange: bigint = this.ctx.utxo.value - totalPrice
 
-        // this.prePayState = true
-        // this.buyerAddr = buyerAddr
+        const stationOutput: ByteString = Utils.buildPublicKeyHashOutput(this.gassStationAddr, totalPrice)
+        const buyerOutput: ByteString = Utils.buildPublicKeyHashOutput(hash160(this.buyerPubKey), buyerChange)
 
-        let outputs = this.buildStateOutput(this.ctx.utxo.value)
-        outputs = Utils.buildPublicKeyHashOutput(this.gassPumpAddr, prePayAmount)
-        outputs += this.buildChangeOutput()
-        assert(hash256(outputs) == this.ctx.hashOutputs)
+        let outputs = stationOutput + buyerOutput
+        if (this.changeAmount > 0n) {
+            outputs += this.buildChangeOutput()
+        }
+
+        assert(hash256(outputs) == this.ctx.hashOutputs, 'hash outputs do not match')
     }
 
-    static prePayTxBuilder(
+
+    static completeTxBuilder(
         current: GassedupApp,
         options: MethodCallOptions<GassedupApp>,
-        prePayAmount: bigint
+        totalPrice: bigint
     ): Promise<ContractTransaction> {
 
-        const next = options.next as StatefulNext<GassedupApp>
-        // const nextInstance = current.next()
-        // nextInstance.prePayState = true
-        // nextInstance.buyerAddr = buyerAddr
-
+        const buyerChange: number = current.balance - Number(totalPrice)
+        console.log('buyerChange:', buyerChange)
+        // console.log(options.changeAddress)
 
         const unsignedTx: bsv.Transaction = new bsv.Transaction()
         .addInput(current.buildContractInput())
 
+        // .addOutput(
+        //     new bsv.Transaction.Output({
+        //         script: next.instance.lockingScript,
+        //         satoshis: Number(prePayAmount)
+        //     })
+        // )
+
         .addOutput(
             new bsv.Transaction.Output({
-                script: next.instance.lockingScript,
-                satoshis: Number(prePayAmount)
+                script: bsv.Script.fromHex(
+                    Utils.buildPublicKeyHashScript(current.gassStationAddr)
+                ),
+                satoshis: Number(totalPrice)
+            })
+        )
+
+        .addOutput(
+            new bsv.Transaction.Output({
+                script: bsv.Script.fromHex(
+                    Utils.buildPublicKeyHashScript(hash160(current.buyerPubKey))
+                ),
+                satoshis: Number(buyerChange)
             })
         )
 
@@ -90,14 +103,28 @@ export class GassedupApp extends SmartContract {
         return Promise.resolve({
             tx: unsignedTx,
             atInputIndex: 0,
-            nexts: [
-                {
-                    instance: next.instance,
-                    atOutputIndex: 0,
-                    balance: Number(prePayAmount),
-                },
-            ]
+            nexts: []
         })
     }
 
 }
+
+
+
+// @method(SigHash.ANYONECANPAY_ALL)
+    // public prePay(buyerPubKey: PubKey) {
+    //     this.buyerPubKey = buyerPubKey
+    //     // assert(this.checkSig(buyerSig, buyerPubKey), 'buyer signature check failed')
+    //     // this.buyerAddr = pubKey2Addr(buyerPubkey)
+
+    //     assert(this.ctx.utxo.value > 0, 'A minimum of 1 Satoshi is required to start pump')
+
+    //     let outputs = this.buildStateOutput(this.ctx.utxo.value)
+    //     // outputs += Utils.buildPublicKeyHashOutput(hash160(this.gassPumpPubKey), prePayAmount)
+    //     // if (this.changeAmount > 0n) {
+    //     //     outputs += this.buildChangeOutput()
+    //     // }
+
+    //     assert(hash256(outputs) == this.ctx.hashOutputs)
+    //     // assert(0 == 0, 'hash mismatch')
+    // }
