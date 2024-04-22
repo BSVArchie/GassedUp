@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import GassPump from './GassPump';
+import Token from './Token';
 // import QRCode from 'qrcode.react';
 import {
   Typography,
@@ -84,9 +85,14 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <Container sx={{ border: '6px solid black', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <Typography variant='h2' sx={{ m: 1 }}>
-          Gassed Up
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', m: 1 }}>
+          <Typography variant='h2' sx={{ m: 2 }}>
+            Gassed Up
+          </Typography>
+          <Box sx={{}}>
+            <Token/>
+          </Box>
+        </Box>
         <Box width='80%' sx={{
             border: '3px solid black',
             color: '#666666',
@@ -127,7 +133,7 @@ const App: React.FC = () => {
             <Button onClick = {openModel} variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }} >Bitcoin</Button>
 
             <Dialog open={open} fullWidth>
-                <DialogTitle>Enter Amount</DialogTitle>
+                <DialogTitle>Enter Pre-pay Amount</DialogTitle>
                 <DialogContent>
                     <TextField onChange = { e => setAmount(Number(e.target.value))} label="Satoshis"></TextField>
                 </DialogContent>
