@@ -17,9 +17,7 @@ import { pubKey2Addr, PubKey, DefaultProvider, bsv, PandaSigner, SensiletSigner,
 import { GassedupApp } from './contracts/gassedupApp'
 import * as dotenv from 'dotenv'
 
-
 const App: React.FC = () => {
-
   const [open, setOpen] = useState(false)
   const [amount, setAmount] = useState(0)
   const [currentTxId, setCurrentTxId] = useState('')
