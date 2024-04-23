@@ -1,4 +1,4 @@
-import GassPump from 'GassPump';
+import GasPump from 'GasPump';
 import { Address } from 'cluster';
 import {
     method,
@@ -64,7 +64,6 @@ export class GassedupApp extends SmartContract {
         assert(hash256(outputs) == this.ctx.hashOutputs, 'hash outputs do not match')
     }
 
-
     static completeTxBuilder(
         current: GassedupApp,
         options: MethodCallOptions<GassedupApp>,
@@ -89,7 +88,6 @@ export class GassedupApp extends SmartContract {
         .addOutput(
             new bsv.Transaction.Output({
                 script: bsv.Script.fromHex(
-                    // Utils.buildPublicKeyHashScript(hash160(current.buyerPubKey))
                     Utils.buildPublicKeyHashScript(current.buyerAddress)
                 ),
                 satoshis: Number(buyerChange)

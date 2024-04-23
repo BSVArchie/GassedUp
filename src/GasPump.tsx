@@ -4,12 +4,12 @@ import { PandaSigner, DefaultProvider, ScryptProvider, toByteString, sha256, bsv
 import { GassedupApp } from './contracts/gassedupApp';
 // import { MethodCallOptions } from 'scrypt-ts'
 
-interface GassPumpProps {
+interface GasPumpProps {
     currentTxId: string
     amount: number
 }
 
-const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
+const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
 
     const [gallons, setGallons] = useState<number>(0)
     const [octanePrice, setOctanePrice] = useState<number>(0)
@@ -55,9 +55,9 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
 
     function startPump() {
         if(!currentTxId) {
-            alert('Prepay is required, please deposit Bitcoin')
+            alert('Pre-authorization payment is required, please deposit Bitcoin')
         } else if(octanePrice == 0) {
-            alert('Please select Octane')
+            alert('Please select an octane')
         } else if (currentTxId && octanePrice > 0)
         setIsPumping(true)
     }
@@ -66,41 +66,38 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
         setIsPumping(false)
     }
 
-    const callComplete = async () => {
-
+    const finishPumpingGas = async () => {
         const provider = new DefaultProvider({
             network: bsv.Networks.testnet
         })
 
-        // const signer = new PandaSigner(provider)
+        // the Gas Pump is using Sensilet
         const signer = new SensiletSigner(provider)
 
         const { isAuthenticated, error } = await signer.requestAuth()
-
         if (!isAuthenticated) {
-            alert(`Buyer wallet not connected: ${error}`)
+            alert(`Gas Pump wallet not connected: ${error}`)
         }
 
-        const gassPumpPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
+        // get the Gas Pump's public key
+        const gasPumpPublicKey = PubKey(toHex(await signer.getDefaultPubKey()))
 
         const atOutputIndex = 0
 
         const tx = await signer.connectedProvider.getTransaction(currentTxId)
 
         const instance = GassedupApp.fromTx(tx, atOutputIndex)
-        // console.log(instance.buyerPubKey, instance.utxo, instance.utxo.satoshis)
+
         await instance.connect(signer)
-
         const nextInstance = instance.next()
-
-        instance.bindTxBuilder('completeTransaction', GassedupApp.completeTxBuilder)
+        // instance.bindTxBuilder('completeTransaction', GassedupApp.completeTxBuilder)
 
         try {
             instance.methods.completeTransaction(
-                BigInt(totalPrice),
-                gassPumpPubKey,
+                // BigInt(totalPrice),
+                // // gasPumpPublicKey,
                 (sigResponses: SignatureResponse[]) => {
-                    return findSig(sigResponses, bsv.PublicKey.fromString(gassPumpPubKey))
+                    return findSig(sigResponses, bsv.PublicKey.fromString(gasPumpPublicKey))
                   },
                 {
                     next: {
@@ -226,10 +223,10 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
             <Container>
                 <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => startPump()}>Start</Button>
                 <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'red', "&:hover": { bgcolor: 'red' } }} onClick={() => stopPump()}>Stop</Button>
-                <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'grey', "&:hover": { bgcolor: 'grey' } }}  onClick={() => callComplete()}>Complete</Button>
+                <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'grey', "&:hover": { bgcolor: 'grey' } }}  onClick={() => finishPumpingGas()}>Complete</Button>
             </Container>
         </>
     )
 }
 
-export default GassPump
+export default GasPump
