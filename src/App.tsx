@@ -24,27 +24,27 @@ const App: React.FC = () => {
   const [amount, setAmount] = useState(0)
   const [currentTxId, setCurrentTxId] = useState('')
 
-
   function handleCash() {
     alert('Bitcoin (electronic cash) is more convenient, try it out!!')
   }
-
 
   function handleCard() {
     alert('Trusted third parties are expensive, try Bitcoin!!')
   }
 
-
-  function openModel() {
+  function openModal() {
     setOpen(true)
   }
 
+  function preAuthorizePayment() {
+    alert('200 Satoshis pre-authed')
+    preAuthorizationTx(200n)
+  }
 
   const deployContract = async () => {
-
-      const provider = new DefaultProvider({
-          network: bsv.Networks.testnet
-      })
+    const provider = new DefaultProvider({
+      network: bsv.Networks.testnet
+    })
 
       // const signer = new SensiletSigner(provider)
       const signer = new PandaSigner(provider)
@@ -52,13 +52,15 @@ const App: React.FC = () => {
       const { isAuthenticated, error } = await signer.requestAuth()
 
       if (!isAuthenticated) {
-          alert(`Gass pump not connected: ${error}`)
+        alert(`Buyer's Yours wallet is not connected: ${error}`)
       } else {
-
         const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
-        const buyerPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
 
-        const instance = new GassedupApp(gassStationAddr, buyerPubKey)
+        const buyerPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
+        const buyerAddress = pubKey2Addr(buyerPubKey)
+        // const gasPumpAddress: Addr = instance.gasPumpAddress
+
+        const instance = new GassedupApp(buyerAddress, 200n)
 
         await instance.connect(signer)
 
@@ -69,10 +71,47 @@ const App: React.FC = () => {
             // alert(`Deployed Contract: ${result.id}`)
             console.log(`Deployed Contract: ${result.id}`)
           })
-
         } catch (error) {
-            console.log(error)
-          }
+          console.log(error)
+        }
+
+        console.log(currentTxId)
+      }
+  }
+
+  const preAuthorizationTx = async (amount: bigint) => {
+    const provider = new DefaultProvider({
+      network: bsv.Networks.testnet
+    })
+
+      // const signer = new SensiletSigner(provider)
+      const signer = new PandaSigner(provider)
+
+      const { isAuthenticated, error } = await signer.requestAuth()
+
+      if (!isAuthenticated) {
+        alert(`Buyer's Yours wallet is not connected: ${error}`)
+      } else {
+        const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
+
+        const buyerPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
+        const buyerAddress = pubKey2Addr(buyerPubKey)
+        // const gasPumpAddress: Addr = instance.gasPumpAddress
+
+        const instance = new GassedupApp(buyerAddress, amount)
+
+        await instance.connect(signer)
+
+        try {
+          instance.deploy(Number(amount)).then((result) => {
+            setCurrentTxId(result.id)
+            console.log(`Deployed Contract: ${result.id}`)
+            alert(`Deployed Pre-authContract: ${result.id}`)
+          })
+        } catch (error) {
+          console.log(error)
+        }
+
         console.log(currentTxId)
       }
   }
@@ -124,7 +163,8 @@ const App: React.FC = () => {
             <Button variant="contained" sx={{ m: 1, bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => handleCash()}>$ Cash</Button>
             <Button variant="contained" sx={{ m: 1 }} onClick={() => handleCard()}>Visa</Button>
 
-            <Button onClick = {openModel} variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }} >Bitcoin</Button>
+            <Button onClick = {openModal} variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }}>Bitcoin</Button>
+            <Button onClick = {preAuthorizePayment} variant="contained" sx={{ m: 1, bgcolor: 'gold', "&:hover": { bgcolor: 'gold' } }} >Pre-auth</Button>
 
             <Dialog open={open} fullWidth>
                 <DialogTitle>Enter Amount</DialogTitle>
@@ -141,7 +181,7 @@ const App: React.FC = () => {
                         <QRCode value={`bitcoin:${arbiterAddr}?amount=${amount}&message=Please%20provide%20your%20address`} size={256} />
                     </Box> */}
                 <DialogActions>
-                    <Button onClick = {deployContract} color='success' variant='contained'>Pre-pay</Button>
+                    <Button onClick = {deployContract} color='success' variant='contained'>Pre-auth</Button>
                     <Button onClick = {cancel} color='error' variant='contained'>Cancel</Button>
                 </DialogActions>
             </Dialog>
