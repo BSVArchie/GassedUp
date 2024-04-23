@@ -42,35 +42,35 @@ const App: React.FC = () => {
       network: bsv.Networks.testnet
     })
 
-      // the Buyer uses Panda/Yours Wallet
-      const signer = new PandaSigner(provider)
+    // the Buyer uses Panda/Yours Wallet
+    const signer = new PandaSigner(provider)
 
-      const { isAuthenticated, error } = await signer.requestAuth()
+    const { isAuthenticated, error } = await signer.requestAuth()
 
-      if (!isAuthenticated) {
-        alert(`Buyer's Yours wallet is not connected: ${error}`)
-      } else {
-        const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
+    if (!isAuthenticated) {
+      alert(`Buyer's Yours wallet is not connected: ${error}`)
+    } else {
+      const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
 
-        const buyerPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
-        const buyerAddress = pubKey2Addr(buyerPubKey)
+      const buyerPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
+      const buyerAddress = pubKey2Addr(buyerPubKey)
 
-        const instance = new GassedupApp(buyerAddress, amount)
+      const instance = new GassedupApp(buyerAddress, amount)
 
-        await instance.connect(signer)
+      await instance.connect(signer)
 
-        try {
-          instance.deploy(Number(amount)).then((result) => {
-            setCurrentTxId(result.id)
-            console.log(`Deployed Contract: ${result.id}`)
-            alert(`Deployed Pre-authContract: ${result.id}`)
-          })
-        } catch (error) {
-          console.log(error)
-        }
-
-        console.log(currentTxId)
+      try {
+        instance.deploy(Number(amount)).then((result) => {
+          setCurrentTxId(result.id)
+          console.log(`Deployed Contract: ${result.id}`)
+          alert(`Deployed Pre-authContract: ${result.id}`)
+        })
+      } catch (error) {
+        console.log(error)
       }
+
+      console.log(currentTxId)
+    }
   }
 
   return (
@@ -80,16 +80,14 @@ const App: React.FC = () => {
           Gassed Up
         </Typography>
         <Box width='80%' sx={{
-            border: '3px solid black',
-            color: '#666666',
-            display: 'flex',
-            // flexDirection: 'column',
-            // flexWrap: 'wrap',
-            justifyContent: 'center',
-            padding: '0.25rem',
-            textAlign: 'left',
-            m: 'auto',
-          }}>
+          border: '3px solid black',
+          color: '#666666',
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '0.25rem',
+          textAlign: 'left',
+          m: 'auto',
+        }}>
           <Box>
             <ol>
               <li>
@@ -123,13 +121,13 @@ const App: React.FC = () => {
             </Button>
 
             <Dialog open={open} fullWidth>
-                <DialogTitle>Enter Amount</DialogTitle>
-                <DialogContent>
-                    <TextField onChange = { e => setAmount(Number(e.target.value))} label="Satoshis"></TextField>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick = {preAuthorizePayment} color='success' variant='contained'>Pre-auth</Button>
-                </DialogActions>
+              <DialogTitle>Enter Amount</DialogTitle>
+              <DialogContent>
+                <TextField onChange = { e => setAmount(Number(e.target.value))} label="Satoshis"></TextField>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick = {preAuthorizePayment} color='success' variant='contained'>Pre-auth</Button>
+              </DialogActions>
             </Dialog>
           </Container>
         </Box>
