@@ -12,13 +12,13 @@ interface GassPumpProps {
 const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
 
     const [gallons, setGallons] = useState<number>(0)
-    const [octainPrice, setOctainPrice] = useState<number>(0)
+    const [octanePrice, setOctanePrice] = useState<number>(0)
     const [totalPrice, setTotalPrice] = useState<number>(0)
     const [isPumping, setIsPumping] = useState(false)
     const [areButtonsDisabled, disableButtons] = useState(false)
 
     function setPrice(price: number) {
-        setOctainPrice(price)
+        setOctanePrice(price)
     }
 
     useEffect(() => {
@@ -46,7 +46,7 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
     }, [isPumping])
 
     useEffect(() => {
-      let total = gallons * octainPrice
+      let total = gallons * octanePrice
       if (total >= amount) {
         setIsPumping(false)
       }
@@ -56,9 +56,9 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
     function startPump() {
         if(!currentTxId) {
             alert('Prepay is required, please deposit Bitcoin')
-        } else if(octainPrice == 0) {
-            alert('Please select Octain')
-        } else if (currentTxId && octainPrice > 0)
+        } else if(octanePrice == 0) {
+            alert('Please select Octane')
+        } else if (currentTxId && octanePrice > 0)
         setIsPumping(true)
     }
 
@@ -123,12 +123,12 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
                 <Container sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', width: '66%' }}>
                     <Box sx={{ border: '2px solid black', display: 'flex',  width: '66%', p: 1, m: 1  }}>
                         <Typography>
-                            {'Octain price:'}
+                            {'Octane price:'}
                         </Typography>
                     </Box>
                     <Box sx={{ border: '2px solid black', display: 'flex',  width: '16%', p: 1, m: 1,  }}>
                         <Typography>
-                            {`${octainPrice} Satoshis`}
+                            {`${octanePrice} Satoshis`}
                         </Typography>
                     </Box>
                 </Container>
@@ -165,10 +165,10 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
                 <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
                     <Box sx={{ border: '2px solid black'}}>
                         <Typography variant='h5'sx={{ p: 2}}>
-                            Price: 10 Sats
+                            10 Sats
                         </Typography>
                     </Box>
-                    <Typography variant='h3'sx={{ p: 2}}>
+                    <Typography variant='h4'sx={{ p: 2}}>
                         Regular
                     </Typography>
                     <Typography variant='h3'>
@@ -185,10 +185,10 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
                 <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
                     <Box sx={{ border: '2px solid black'}}>
                         <Typography variant='h5'sx={{ p: 2}}>
-                            Price: 15 Sats
+                            15 Sats
                         </Typography>
                     </Box>
-                    <Typography variant='h3'sx={{ p: 2}}>
+                    <Typography variant='h4'sx={{ p: 2 }}>
                         Plus
                     </Typography>
                     <Typography variant='h3'>
@@ -205,10 +205,10 @@ const GassPump: React.FC<GassPumpProps> = ({ currentTxId, amount }) => {
                 <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
                     <Box sx={{ border: '2px solid black'}}>
                         <Typography variant='h5'sx={{ p: 2}}>
-                            Price: 20 Sats
+                            20 Sats
                         </Typography>
                     </Box>
-                    <Typography variant='h3'sx={{ p: 2}}>
+                    <Typography variant='h4'sx={{ p: 2}}>
                         Premium
                     </Typography>
                     <Typography variant='h3'>
