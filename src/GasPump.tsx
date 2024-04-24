@@ -118,15 +118,16 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
     return (
       <>
         <Container sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', flexWrap: 'wrap', width: '88%' }}>
+
           <Container sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', width: '66%' }}>
             <Box sx={{ border: '2px solid black', display: 'flex',  width: '66%', p: 1, m: 1  }}>
               <Typography>
                 {'Octane price:'}
               </Typography>
             </Box>
-            <Box sx={{ border: '2px solid black', display: 'flex',  width: '16%', p: 1, m: 1,  }}>
+            <Box sx={{ border: '2px solid black', display: 'flex',  width: '18%', p: 1, m: 1,  }}>
               <Typography>
-                {`${octanePrice} Satoshis`}
+                {`${octanePrice} Sats`}
               </Typography>
             </Box>
           </Container>
@@ -137,7 +138,7 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
                 {'Total Gallons:'}
               </Typography>
             </Box>
-            <Box sx={{ border: '2px solid black', display: 'flex',  width: '16%', p: 1, m: 1,  }}>
+            <Box sx={{ border: '2px solid black', display: 'flex',  width: '18%', p: 1, m: 1,  }}>
               <Typography>
                 {`${gallons} Gallons`}
               </Typography>
@@ -150,9 +151,9 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
                 {'Total Price: '}
               </Typography>
             </Box>
-            <Box sx={{ border: '2px solid black', display: 'flex', width: '16%', p: 1, m: 1,  }}>
+            <Box sx={{ border: '2px solid black', display: 'flex', width: '18%', p: 1, m: 1,  }}>
               <Typography>
-                {`${totalPrice} Satoshis`}
+                {`${totalPrice} Sats`}
               </Typography>
             </Box>
           </Container>

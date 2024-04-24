@@ -1,11 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
-<<<<<<< HEAD
-import GassPump from './GassPump';
 import Token from './Token';
-=======
 import GasPump from './GasPump';
->>>>>>> 75482b4a9822c218a8d5bded0cb1d091e21888c7
 // import QRCode from 'qrcode.react';
 import {
   Typography,
@@ -23,8 +19,10 @@ import { GassedupApp } from './contracts/gassedupApp'
 import * as dotenv from 'dotenv'
 
 const App: React.FC = () => {
+
   const [open, setOpen] = useState(false)
   const [amount, setAmount] = useState(0)
+  const [customAmount, setCustomAmount] = useState(0)
   const [currentTxId, setCurrentTxId] = useState('')
 
   function handleCash() {
@@ -35,44 +33,77 @@ const App: React.FC = () => {
     alert('Trusted third parties are expensive, try Bitcoin!!')
   }
 
-  function preAuthorizePayment() {
-    alert('Pre-authorizing 200 Satoshis for gas')
-    preAuthorizationTx(200n)
+  function openModel() {
+    setOpen(true)
   }
 
-  const preAuthorizationTx = async (amount: bigint) => {
-    const provider = new DefaultProvider({
-      network: bsv.Networks.testnet
-    })
+  function cancel() {
+    setOpen(false)
+  }
 
-    // the Buyer uses Panda/Yours Wallet
-    const signer = new PandaSigner(provider)
+  useEffect(() => {
+    if (amount > 0) {
+      preAuthorizationTx()
+    }
 
-    const { isAuthenticated, error } = await signer.requestAuth()
+  }, [amount])
 
-    if (!isAuthenticated) {
-      alert(`Buyer's Yours wallet is not connected: ${error}`)
-    } else {
-      const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
+  function preAuthorize100() {
+    // alert('Pre-authorizing 200 Satoshis for gas')
+    setAmount(100)
+    // preAuthorizationTx()
+  }
 
-      const buyerPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
-      const buyerAddress = pubKey2Addr(buyerPubKey)
+  function preAuthorize200() {
+    // alert('Pre-authorizing 200 Satoshis for gas')
+    setAmount(200)
+    // preAuthorizationTx()
+  }
 
-      const instance = new GassedupApp(buyerAddress, amount)
+  function preAuthorizeCustom() {
+    // alert('Pre-authorizing 200 Satoshis for gas')
+    if (customAmount > 0) {
+      setAmount(customAmount)
+    } else {alert('Pre-Auth amount must be greater than 0')}
 
-      await instance.connect(signer)
+    // preAuthorizationTx()
+  }
 
-      try {
-        instance.deploy(Number(amount)).then((result) => {
-          setCurrentTxId(result.id)
-          console.log(`Deployed Contract: ${result.id}`)
-          alert(`Deployed Pre-authContract: ${result.id}`)
-        })
-      } catch (error) {
-        console.log(error)
-      }
+  const preAuthorizationTx = async () => {
 
-      console.log(currentTxId)
+      const provider = new DefaultProvider({
+        network: bsv.Networks.testnet
+      })
+
+      // the Buyer uses Panda/Yours Wallet
+      const signer = new PandaSigner(provider)
+
+      const { isAuthenticated, error } = await signer.requestAuth()
+
+      if (!isAuthenticated) {
+        alert(`Buyer's Yours wallet is not connected: ${error}`)
+      } else {
+        const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
+
+        const buyerPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
+        const buyerAddress = pubKey2Addr(buyerPubKey)
+
+        const instance = new GassedupApp(buyerAddress, BigInt(amount))
+
+        await instance.connect(signer)
+
+        try {
+          instance.deploy(amount).then((result) => {
+            setCurrentTxId(result.id)
+            console.log(`Deployed Contract: ${result.id}`)
+            alert(`Deployed Pre-authContract: ${result.id}`)
+            setOpen(false)
+          })
+        } catch (error) {
+          console.log(error)
+        }
+
+        console.log(currentTxId)
     }
   }
 
@@ -122,40 +153,23 @@ const App: React.FC = () => {
             <Button variant="contained" sx={{ m: 1, bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => handleCash()}>Cash</Button>
             <Button variant="contained" sx={{ m: 1 }} onClick={() => handleCard()}>Visa</Button>
             <Button
-              onClick={preAuthorizePayment}
+              onClick={openModel}
               variant="contained"
               sx={{ m: 1, bgcolor: '#EAB300', "&:hover": { bgcolor: '#EEC233' } }}>
               Bitcoin
             </Button>
 
             <Dialog open={open} fullWidth>
-<<<<<<< HEAD
-                <DialogTitle>Enter Pre-pay Amount</DialogTitle>
-                <DialogContent>
-                    <TextField onChange = { e => setAmount(Number(e.target.value))} label="Satoshis"></TextField>
-                </DialogContent>
-                    {/* <Box textAlign="center" mb={4}>
-                        <Typography>
-                        Please scan the QR code below to make a payment of amount BSV to the following address:
-                        </Typography>
-                        <Typography variant="subtitle1">{arbiterAddr}</Typography>
-                    </Box>
-                    <Box onChange={handleAmount} display="flex" justifyContent="center">
-                        <QRCode value={`bitcoin:${arbiterAddr}?amount=${amount}&message=Please%20provide%20your%20address`} size={256} />
-                    </Box> */}
+              <DialogTitle sx={{ p: 1 }}>Select Pre-pay amount or enter a custom amount</DialogTitle>
+              <Box>
+                <Button onClick = {preAuthorize100} variant='contained' sx={{ width: '20%', m: 1 }}>100 Sats</Button>
+                <Button onClick = {preAuthorize200} variant='contained' sx={{ width: '20%', m: 1 }}>200 Sats</Button>
+                <TextField onChange = { e => setCustomAmount(Number(e.target.value))} label="Satoshis"></TextField>
+              </Box>
                 <DialogActions>
-                    <Button onClick = {deployContract} color='success' variant='contained'>Pre-pay</Button>
-                    <Button onClick = {cancel} color='error' variant='contained'>Cancel</Button>
+                  <Button onClick = {preAuthorizeCustom} color='success' variant='contained' sx={{ width: '20%', m: 1 }}>Pre-auth</Button>
+                  <Button onClick = {cancel} color='error' variant='contained' sx={{ width: '20%', m: 1 }} >Cancel</Button>
                 </DialogActions>
-=======
-              <DialogTitle>Enter Amount</DialogTitle>
-              <DialogContent>
-                <TextField onChange = { e => setAmount(Number(e.target.value))} label="Satoshis"></TextField>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick = {preAuthorizePayment} color='success' variant='contained'>Pre-auth</Button>
-              </DialogActions>
->>>>>>> 75482b4a9822c218a8d5bded0cb1d091e21888c7
             </Dialog>
           </Container>
         </Box>
