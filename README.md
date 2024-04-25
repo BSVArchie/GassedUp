@@ -1,4 +1,4 @@
-# Gassed Up
+# Gassed Up ⛽️
 
 A sCrypt Hackathon 2024 project submission.
 
