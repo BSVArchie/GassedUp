@@ -114,6 +114,12 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
             console.log(`result: ${result.tx.id}`)
             alert("Yay! You just got gassed up! ⛽️")
             alert(result.tx.id);
+            console.log('Octane price: ', octanePrice)
+            setOctanePrice(0)
+            console.log('Total gallons pumped: ', gallons)
+            setGallons(0)
+            console.log('Total price: ', totalPrice)
+            setTotalPrice(0)
         })
       } catch(error) {
         console.log(error)
@@ -187,7 +193,7 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
           <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
             <Box sx={{ border: '2px solid black'}}>
               <Typography variant='h5'sx={{ p: 2}}>
-                15 Sats
+                20 Sats
               </Typography>
             </Box>
             <Typography variant='h4'sx={{ p: 2 }}>
@@ -198,7 +204,7 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
             </Typography>
             <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }}
               disabled={areButtonsDisabled}
-              onClick={() => setPrice(15)}>
+              onClick={() => setPrice(20)}>
                 Select
             </Button>
           </Box>
@@ -206,7 +212,7 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
           <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
             <Box sx={{ border: '2px solid black'}}>
               <Typography variant='h5'sx={{ p: 2}}>
-                20 Sats
+                30 Sats
               </Typography>
             </Box>
             <Typography variant='h4'sx={{ p: 2}}>
@@ -217,7 +223,7 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
             </Typography>
             <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }}
               disabled={areButtonsDisabled}
-              onClick={() => setPrice(20)}>
+              onClick={() => setPrice(30)}>
                 Select
             </Button>
           </Box>
