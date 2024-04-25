@@ -114,6 +114,12 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
             console.log(`result: ${result.tx.id}`)
             alert("Yay! You just got gassed up! ⛽️")
             alert(result.tx.id);
+            console.log('Octane price: ', octanePrice)
+            setOctanePrice(0)
+            console.log('Total gallons pumped: ', gallons)
+            setGallons(0)
+            console.log('Total price: ', totalPrice)
+            setTotalPrice(0)
         })
       } catch(error) {
         console.log(error)
@@ -262,23 +268,10 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
             </Button>
           </Box>
 
-          <Box
-            sx={{
-              backgroundColor: "#D7D7D7",
-              border: "4px solid black",
-              display: "flex",
-              flexDirection: "column",
-              m: 3,
-              width: 200,
-              height: 260,
-            }}
-          >
-            <Box sx={{ background: "white" }}>
-              <Typography
-                variant="h5"
-                sx={{ p: 2, "font-family": "monospace", "font-size": "1rem" }}
-              >
-                15 Sats
+          <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
+            <Box sx={{ border: '2px solid black'}}>
+              <Typography variant='h5'sx={{ p: 2}}>
+                20 Sats
               </Typography>
             </Box>
             <Typography variant="h4" sx={{ p: 2 }}>
@@ -289,29 +282,15 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
               variant="contained"
               sx={{ m: 2, bgcolor: "black", "&:hover": { bgcolor: "black" } }}
               disabled={areButtonsDisabled}
-              onClick={() => setPrice(15)}
-            >
-              Select
+              onClick={() => setPrice(20)}>
+                Select
             </Button>
           </Box>
 
-          <Box
-            sx={{
-              backgroundColor: "#558FFF",
-              border: "4px solid black",
-              display: "flex",
-              flexDirection: "column",
-              m: 3,
-              width: 200,
-              height: 260,
-            }}
-          >
-            <Box sx={{ background: "white" }}>
-              <Typography
-                variant="h5"
-                sx={{ p: 2, "font-family": "monospace", "font-size": "1rem" }}
-              >
-                20 Sats
+          <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
+            <Box sx={{ border: '2px solid black'}}>
+              <Typography variant='h5'sx={{ p: 2}}>
+                30 Sats
               </Typography>
             </Box>
             <Typography variant="h4" sx={{ p: 2 }}>
@@ -322,9 +301,8 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
               variant="contained"
               sx={{ m: 2, bgcolor: "black", "&:hover": { bgcolor: "black" } }}
               disabled={areButtonsDisabled}
-              onClick={() => setPrice(20)}
-            >
-              Select
+              onClick={() => setPrice(30)}>
+                Select
             </Button>
           </Box>
         </Container>

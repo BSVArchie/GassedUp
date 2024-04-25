@@ -32,6 +32,12 @@ export class GassedupApp extends SmartContract {
   @prop()
   readonly gasPumpPublicKey: PubKey
 
+
+  // Gas pump will send the send payment to the gas station address after each transaction
+  // This is similar to moving money from the register to a safe for security and more efficient accounting
+  @prop()
+  readonly gasStationPubKey: PubKey
+
   // Buyer is going to pay with Yours Wallet - which has PrivKey, PubKey, and Address
   // Buyer signs the initial SmartContract deploy (with the prepayment)
   @prop(true)
@@ -48,8 +54,10 @@ export class GassedupApp extends SmartContract {
     this.buyerAddress = buyerAddress
     this.prepaymentAmount = prepaymentAmount
 
+    this.gasStationPubKey = PubKey(toByteString("02735235e7a21112c33c2cad159fc9ac1c8529624ce8769580462159d1ace47a10"))
+
     // update this PublicKey with your GasPump's PubKey (see getPubKey.js)
-    this.gasPumpPublicKey = PubKey(toByteString("023d63daaf3f2c63462563a14cac33b8fb7742ff61148285fdc7a9a8bc308c75ee"))
+    this.gasPumpPublicKey = PubKey(toByteString("02bdac4af01dfdfbd98e656e254613f23c0b7c537882edca4cae95cf5bd0713997"))
   }
 
   // TODO 2: also enable Buyer to redeem the SmartContract in an exception case.
@@ -62,14 +70,15 @@ export class GassedupApp extends SmartContract {
     assert(this.checkSig(sig, this.gasPumpPublicKey), 'checkSig failed')
     assert(this.prepaymentAmount >= totalPrice, 'Error: totalPrice is more than the Buyer prepaid for')
     const buyerChange: bigint = this.prepaymentAmount - totalPrice
-    const buyerOutput: ByteString = Utils.buildPublicKeyHashOutput(this.buyerAddress, buyerChange)
 
-    let outputs = buyerOutput
+    const buyerOutput: ByteString = Utils.buildPublicKeyHashOutput(this.buyerAddress, buyerChange)
+    const gasStationOutput: ByteString = Utils.buildAddressOutput(hash160(this.gasStationPubKey), totalPrice)
+
+    let outputs = gasStationOutput + buyerOutput
     // build the change output back to the GasPump
     if (this.changeAmount > BigInt(0)) {
       outputs += this.buildChangeOutput()
     }
-
     assert(hash256(outputs) == this.ctx.hashOutputs, 'hash outputs do not match')
   }
 
@@ -78,20 +87,20 @@ export class GassedupApp extends SmartContract {
       options: MethodCallOptions<GassedupApp>,
       totalPrice: bigint
   ): Promise<ContractTransaction> {
-    const buyerChange: number = current.balance - Number(totalPrice)
+    const buyerChange: number = Number(current.balance) - Number(totalPrice)
     console.log('buyerChange:', buyerChange)
 
     const unsignedTx: bsv.Transaction = new bsv.Transaction()
-    .addInput(current.buildContractInput())
+    .addInput(current.buildContractInput(options.fromUTXO))
 
-    // .addOutput(
-    //     new bsv.Transaction.Output({
-    //         script: bsv.Script.fromHex(
-    //             Utils.buildPublicKeyHashScript(current.gassStationAddr)
-    //         ),
-    //         satoshis: Number(totalPrice)
-    //     })
-    // )
+    .addOutput(
+      new bsv.Transaction.Output({
+          script: bsv.Script.fromHex(
+              Utils.buildPublicKeyHashScript(hash160(current.gasStationPubKey))
+          ),
+          satoshis: Number(totalPrice)
+      })
+    )
 
     .addOutput(
       new bsv.Transaction.Output({
