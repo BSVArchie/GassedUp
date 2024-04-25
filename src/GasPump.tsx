@@ -5,8 +5,8 @@ import { GassedupApp } from './contracts/gassedupApp';
 // import { MethodCallOptions } from 'scrypt-ts'
 
 interface GasPumpProps {
-    currentTxId: string
-    amount: number
+  currentTxId: string
+  amount: number
 }
 
 const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
@@ -69,11 +69,14 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
 
     const finishPumpingGas = async () => {
       const provider = new DefaultProvider({
-          network: bsv.Networks.testnet
+        network: bsv.Networks.testnet
       })
 
       // the Gas Pump is using Sensilet
       const signer = new SensiletSigner(provider)
+
+      // Try switching to the Your's wallet again to try and spend the GasPump's Transaction (you shouldn't be able to)
+      // const signer = new PandaSigner(provider)
 
       const { isAuthenticated, error } = await signer.requestAuth()
       if (!isAuthenticated) {
@@ -109,6 +112,8 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
           }
         ).then((result) => {
             console.log(`result: ${result.tx.id}`)
+            alert("Yay! You just got gassed up! ⛽️")
+            alert(result.tx.id);
         })
       } catch(error) {
         console.log(error)

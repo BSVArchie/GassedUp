@@ -26,8 +26,11 @@ import {
 export class GassedupApp extends SmartContract {
   // Gas Pump will be paid by Sensilet wallet - which has PrivKey, PubKey, and Address
   // Gas Pump is responsible for providing the initial SmartContract template to the Buyer
+  // @prop()
+  // readonly gasPumpAddress: Addr
+
   @prop()
-  readonly gasPumpAddress: Addr
+  readonly gasPumpPublicKey: PubKey
 
   // Buyer is going to pay with Yours Wallet - which has PrivKey, PubKey, and Address
   // Buyer signs the initial SmartContract deploy (with the prepayment)
@@ -43,20 +46,26 @@ export class GassedupApp extends SmartContract {
   constructor(buyerAddress: Addr, prepaymentAmount: bigint) {
     super(...arguments)
     this.buyerAddress = buyerAddress
-    this.prepaymentAmount = prepaymentAmount // 200
+    this.prepaymentAmount = prepaymentAmount
 
-    this.gasPumpAddress = Addr(toByteString('mr7JKKTeMNeAxqBLTV3zn9eEBmoYVp43Pt', true))
+    // update this PublicKey with your GasPump's PubKey (see getPubKey.js)
+    this.gasPumpPublicKey = PubKey(toByteString("023d63daaf3f2c63462563a14cac33b8fb7742ff61148285fdc7a9a8bc308c75ee"))
   }
+
+  // TODO 2: also enable Buyer to redeem the SmartContract in an exception case.
 
   // after Buyer spends X satoshis on gas
   // return the unspent satoshis to the Buyer's address
   @method()
   public completeTransaction(totalPrice: bigint, sig: Sig) {
-    assert(this.prepaymentAmount > totalPrice, 'Error: totalPrice is more than the Buyer prepaid for')
+    // ensure only the GasPump can spend the SmartContract
+    assert(this.checkSig(sig, this.gasPumpPublicKey), 'checkSig failed')
+    assert(this.prepaymentAmount >= totalPrice, 'Error: totalPrice is more than the Buyer prepaid for')
     const buyerChange: bigint = this.prepaymentAmount - totalPrice
     const buyerOutput: ByteString = Utils.buildPublicKeyHashOutput(this.buyerAddress, buyerChange)
 
     let outputs = buyerOutput
+    // build the change output back to the GasPump
     if (this.changeAmount > BigInt(0)) {
       outputs += this.buildChangeOutput()
     }
