@@ -36,7 +36,7 @@ export class GassedupApp extends SmartContract {
   // Gas pump will send the send payment to the gas station address after each transaction
   // This is similar to moving money from the register to a safe for security and more efficient accounting
   @prop()
-  readonly gasStationPubKey: PubKey
+  readonly gasStationPubKey: Addr
 
   // Buyer is going to pay with Yours Wallet - which has PrivKey, PubKey, and Address
   // Buyer signs the initial SmartContract deploy (with the prepayment)
@@ -54,7 +54,7 @@ export class GassedupApp extends SmartContract {
     this.buyerAddress = buyerAddress
     this.prepaymentAmount = prepaymentAmount
 
-    this.gasStationPubKey = PubKey(toByteString("02735235e7a21112c33c2cad159fc9ac1c8529624ce8769580462159d1ace47a10"))
+    this.gasStationPubKey = Addr(toByteString("02735235e7a21112c33c2cad159fc9ac1c8529624ce8769580462159d1ace47a10"))
 
     // update this PublicKey with your GasPump's PubKey (see getPubKey.js)
     this.gasPumpPublicKey = PubKey(toByteString("02bdac4af01dfdfbd98e656e254613f23c0b7c537882edca4cae95cf5bd0713997"))

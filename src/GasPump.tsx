@@ -111,9 +111,9 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
             changeAddress: await signer.getDefaultAddress()
           }
         ).then((result) => {
-            console.log(`result: ${result.tx.id}`)
             alert("Yay! You just got gassed up! ⛽️")
             alert(result.tx.id);
+            console.log(`result: ${result.tx.id}`)
             console.log('Octane price: ', octanePrice)
             setOctanePrice(0)
             console.log('Total gallons pumped: ', gallons)
@@ -128,23 +128,8 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
 
     return (
       <>
-        <Container
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-            flexWrap: "wrap",
-            width: "88%",
-          }}
-        >
-          <Container
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              flexWrap: "wrap",
-              width: "66%",
-            }}
-          >
+        <Container sx={{ display: "flex", justifyContent: "center", flexDirection: "column", flexWrap: "wrap", width: "88%" }}>
+          <Container sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", width: "66%" }}>
             <Box
               sx={{
                 border: "2px solid black",
@@ -235,36 +220,22 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
         </Container>
 
         <Container sx={{ justifyContent: "center", display: "flex", p: 0.03 }}>
-          <Box
-            sx={{
-              backgroundColor: "#FF6688",
-              border: "4px solid black",
-              display: "flex",
-              flexDirection: "column",
-              m: 3,
-              width: 200,
-              height: 260,
-            }}
-          >
-            <Box sx={{ background: "white" }}>
-              <Typography
-                variant="h5"
-                sx={{ p: 2, "font-family": "monospace", "font-size": "1rem" }}
-              >
+          <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
+            <Box sx={{ border: '2px solid black'}}>
+              <Typography variant='h5'sx={{ p: 2}}>
                 10 Sats
               </Typography>
             </Box>
             <Typography variant="h4" sx={{ p: 2 }}>
               Regular
             </Typography>
-            <Typography variant="h3">87</Typography>
+            <Typography variant="h3">89</Typography>
             <Button
               variant="contained"
               sx={{ m: 2, bgcolor: "black", "&:hover": { bgcolor: "black" } }}
               disabled={areButtonsDisabled}
-              onClick={() => setPrice(10)}
-            >
-              Select
+              onClick={() => setPrice(10)}>
+                Select
             </Button>
           </Box>
 
