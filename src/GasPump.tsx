@@ -18,7 +18,7 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
     const [areButtonsDisabled, disableButtons] = useState(false)
 
     function setPrice(price: number) {
-        setOctanePrice(price)
+      setOctanePrice(price)
     }
 
     useEffect(() => {
@@ -122,114 +122,253 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
 
     return (
       <>
-        <Container sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', flexWrap: 'wrap', width: '88%' }}>
-
-          <Container sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', width: '66%' }}>
-            <Box sx={{ border: '2px solid black', display: 'flex',  width: '66%', p: 1, m: 1  }}>
-              <Typography>
-                {'Octane price:'}
-              </Typography>
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            flexWrap: "wrap",
+            width: "88%",
+          }}
+        >
+          <Container
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              width: "66%",
+            }}
+          >
+            <Box
+              sx={{
+                border: "2px solid black",
+                display: "flex",
+                width: "66%",
+                p: 1,
+                m: 1,
+              }}
+            >
+              <Typography>{"Octane price:"}</Typography>
             </Box>
-            <Box sx={{ border: '2px solid black', display: 'flex',  width: '18%', p: 1, m: 1,  }}>
-              <Typography>
-                {`${octanePrice} Sats`}
-              </Typography>
+            <Box
+              sx={{
+                border: "2px solid black",
+                display: "flex",
+                width: "18%",
+                p: 1,
+                m: 1,
+              }}
+            >
+              <Typography>{`${octanePrice} Sats`}</Typography>
             </Box>
           </Container>
 
-          <Container sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', width: '66%' }}>
-            <Box sx={{ border: '2px solid black', display: 'flex',  width: '66%', p: 1, m: 1  }}>
-              <Typography>
-                {'Total Gallons:'}
-              </Typography>
+          <Container
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              width: "66%",
+            }}
+          >
+            <Box
+              sx={{
+                border: "2px solid black",
+                display: "flex",
+                width: "66%",
+                p: 1,
+                m: 1,
+              }}
+            >
+              <Typography>{"Total gallons:"}</Typography>
             </Box>
-            <Box sx={{ border: '2px solid black', display: 'flex',  width: '18%', p: 1, m: 1,  }}>
-              <Typography>
-                {`${gallons} Gallons`}
-              </Typography>
+            <Box
+              sx={{
+                border: "2px solid black",
+                display: "flex",
+                width: "18%",
+                p: 1,
+                m: 1,
+              }}
+            >
+              <Typography>{`${gallons} Gallons`}</Typography>
             </Box>
           </Container>
 
-          <Container sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', width: '66%' }}>
-            <Box sx={{ border: '2px solid black', display: 'flex',  width: '66%', p: 1, m: 1  }}>
-              <Typography>
-                {'Total Price: '}
-              </Typography>
+          <Container
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              width: "66%",
+            }}
+          >
+            <Box
+              sx={{
+                border: "2px solid black",
+                display: "flex",
+                width: "66%",
+                p: 1,
+                m: 1,
+              }}
+            >
+              <Typography>{"Total price: "}</Typography>
             </Box>
-            <Box sx={{ border: '2px solid black', display: 'flex', width: '18%', p: 1, m: 1,  }}>
-              <Typography>
-                {`${totalPrice} Sats`}
-              </Typography>
+            <Box
+              sx={{
+                border: "2px solid black",
+                display: "flex",
+                width: "18%",
+                p: 1,
+                m: 1,
+              }}
+            >
+              <Typography>{`${totalPrice} Sats`}</Typography>
             </Box>
           </Container>
         </Container>
 
-        <Container sx={{ justifyContent: 'center', display: 'flex', p: .03 }}>
-          <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
-            <Box sx={{ border: '2px solid black'}}>
-              <Typography variant='h5'sx={{ p: 2}}>
+        <Container sx={{ justifyContent: "center", display: "flex", p: 0.03 }}>
+          <Box
+            sx={{
+              backgroundColor: "#FF6688",
+              border: "4px solid black",
+              display: "flex",
+              flexDirection: "column",
+              m: 3,
+              width: 200,
+              height: 260,
+            }}
+          >
+            <Box sx={{ background: "white" }}>
+              <Typography
+                variant="h5"
+                sx={{ p: 2, "font-family": "monospace", "font-size": "1rem" }}
+              >
                 10 Sats
               </Typography>
             </Box>
-            <Typography variant='h4'sx={{ p: 2}}>
+            <Typography variant="h4" sx={{ p: 2 }}>
               Regular
             </Typography>
-            <Typography variant='h3'>
-                87
-            </Typography>
-            <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }}
+            <Typography variant="h3">87</Typography>
+            <Button
+              variant="contained"
+              sx={{ m: 2, bgcolor: "black", "&:hover": { bgcolor: "black" } }}
               disabled={areButtonsDisabled}
-              onClick={() => setPrice(10)}>
-                Select
+              onClick={() => setPrice(10)}
+            >
+              Select
             </Button>
           </Box>
 
-          <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
-            <Box sx={{ border: '2px solid black'}}>
-              <Typography variant='h5'sx={{ p: 2}}>
+          <Box
+            sx={{
+              backgroundColor: "#D7D7D7",
+              border: "4px solid black",
+              display: "flex",
+              flexDirection: "column",
+              m: 3,
+              width: 200,
+              height: 260,
+            }}
+          >
+            <Box sx={{ background: "white" }}>
+              <Typography
+                variant="h5"
+                sx={{ p: 2, "font-family": "monospace", "font-size": "1rem" }}
+              >
                 15 Sats
               </Typography>
             </Box>
-            <Typography variant='h4'sx={{ p: 2 }}>
+            <Typography variant="h4" sx={{ p: 2 }}>
               Plus
             </Typography>
-            <Typography variant='h3'>
-              89
-            </Typography>
-            <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }}
+            <Typography variant="h3">89</Typography>
+            <Button
+              variant="contained"
+              sx={{ m: 2, bgcolor: "black", "&:hover": { bgcolor: "black" } }}
               disabled={areButtonsDisabled}
-              onClick={() => setPrice(15)}>
-                Select
+              onClick={() => setPrice(15)}
+            >
+              Select
             </Button>
           </Box>
 
-          <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
-            <Box sx={{ border: '2px solid black'}}>
-              <Typography variant='h5'sx={{ p: 2}}>
+          <Box
+            sx={{
+              backgroundColor: "#558FFF",
+              border: "4px solid black",
+              display: "flex",
+              flexDirection: "column",
+              m: 3,
+              width: 200,
+              height: 260,
+            }}
+          >
+            <Box sx={{ background: "white" }}>
+              <Typography
+                variant="h5"
+                sx={{ p: 2, "font-family": "monospace", "font-size": "1rem" }}
+              >
                 20 Sats
               </Typography>
             </Box>
-            <Typography variant='h4'sx={{ p: 2}}>
+            <Typography variant="h4" sx={{ p: 2 }}>
               Premium
             </Typography>
-            <Typography variant='h3'>
-              93
-            </Typography>
-            <Button variant="contained" sx={{ m: 2, bgcolor: 'black', "&:hover": { bgcolor: 'black' } }}
+            <Typography variant="h3">93</Typography>
+            <Button
+              variant="contained"
+              sx={{ m: 2, bgcolor: "black", "&:hover": { bgcolor: "black" } }}
               disabled={areButtonsDisabled}
-              onClick={() => setPrice(20)}>
-                Select
+              onClick={() => setPrice(20)}
+            >
+              Select
             </Button>
           </Box>
         </Container>
 
         <Container>
-          <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => startPump()}>Start</Button>
-          <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'red', "&:hover": { bgcolor: 'red' } }} onClick={() => stopPump()}>Stop</Button>
-          <Button variant="contained" sx={{ m: 2, width: '30%', bgcolor: 'grey', "&:hover": { bgcolor: 'grey' } }}  onClick={() => finishPumpingGas()}>Complete</Button>
+          <Button
+            variant="contained"
+            sx={{
+              m: 2,
+              width: "30%",
+              bgcolor: "green",
+              "&:hover": { bgcolor: "green" },
+            }}
+            onClick={() => startPump()}
+          >
+            Start
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              m: 2,
+              width: "30%",
+              bgcolor: "red",
+              "&:hover": { bgcolor: "red" },
+            }}
+            onClick={() => stopPump()}
+          >
+            Stop
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              m: 2,
+              width: "30%",
+              bgcolor: "grey",
+              "&:hover": { bgcolor: "grey" },
+            }}
+            onClick={() => finishPumpingGas()}
+          >
+            Complete
+          </Button>
         </Container>
       </>
-    )
+    );
 }
 
 export default GasPump

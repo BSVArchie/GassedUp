@@ -108,7 +108,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Container sx={{ border: '6px solid black', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <Container sx={{ "background": "#F4F4F4", "margin-top": "1rem", border: '6px solid black', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', m: 1 }}>
           <Typography variant='h2' sx={{ m: 2 }}>
             Gassed Up
@@ -119,6 +119,7 @@ const App: React.FC = () => {
         </Box>
         <Box width='80%' sx={{
           border: '3px solid black',
+          background: "white",
           color: '#666666',
           display: 'flex',
           justifyContent: 'center',
@@ -150,7 +151,7 @@ const App: React.FC = () => {
           </Box>
           <Container sx={{ width: '30%', display: 'flex', flexDirection: 'column'}}>
             <Button variant="contained" sx={{ m: 1, bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => handleCash()}>Cash</Button>
-            <Button variant="contained" sx={{ m: 1 }} onClick={() => handleCard()}>Visa</Button>
+            <Button variant="contained" sx={{ m: 1 }} onClick={() => handleCard()}>Credit card</Button>
             <Button
               onClick={openModel}
               variant="contained"
