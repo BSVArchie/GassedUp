@@ -107,7 +107,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Container sx={{ border: '6px solid black', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <Container sx={{ "background": "#F4F4F4", "margin-top": "1rem", border: '6px solid black', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', m: 1 }}>
           <Typography variant='h2' sx={{ m: 2 }}>
             Gassed Up
@@ -166,7 +166,6 @@ const App: React.FC = () => {
             </Container>
 
           </Box>
-
         </Box>
         <GasPump currentTxId={currentTxId} amount={amount}/>
       </Container>

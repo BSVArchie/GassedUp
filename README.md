@@ -1,46 +1,60 @@
-# Getting Started with Create React App
+# Gassed Up ⛽️
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A sCrypt Hackathon 2024 project submission.
 
-## Available Scripts
+We decided to participate in the sCrypt hackathon
+to learn about bitcoin's script capabilities
+using the sCrypt Smart Contract library.
 
-In the project directory, you can run:
+For the project scope, we sought to port the existing process of buying gasoline to bitcoin.
 
-### `npm start`
+The current process consists of:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. a user arriving at a gas station gas pump
+1. a user swiping a credit card and getting pre-charged for $200 (which covers the cost of filling up)
+1. a user pumping gas; selecting an octane, pumping the gas, and hanging up the nozzle
+1. the gas station gas pump reverting the pre-charge amount
+1. the gas station gas pump charging the credit card for the actual amount of gas purchased.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+---
 
-### `npm test`
+### User Scenario
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+This scenario (or business process) involves two actors:
 
-### `npm run build`
+1. Buyer - the person who's going to be buying gas
+1. Gas Pump - a single gas pump at a gas station
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Getting this project running
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. clone this repo
+1. ensure Node 16+ is installed
+1. run `npm i` from the root of the directory to install the project's dependencies
+1. ensure Yours Wallet is installed in your browser (set it to testnet mode)
+1. ensure Sensilet Wallet is installed in your browser (set it to testnet mode too)
+1. export your testnet Sensilet Wallet private key and copy it into `getPubKey.js`
+  * then run `npm getPubKey.js` to get a public key (this key will be used as the Public Key for the Gas Pump)
+  * copy the Public Key into the `/src/contracs/GassedUp.ts` Smart Contract
+  * run `npx scrypt-cli compile` to compile the smart contract into the `/artifacts` directory
+1. Finally, run `npm start` to start a web server serving a React App that will use the GassedUp bitcoin smart contract
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The app should now be running at http://localhost:3000.
 
-### `npm run eject`
+### Running through the scenario
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+With the app running at http://localhost:3000 and both Yours and Sensilet Wallets running in the browser (and both in `testnet` mode):
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+> tip: to fund the wallets for testing, visit https://scrypt.io/faucet
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+You'll see something like:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+![screenshot](/public/gassed-up-screenshot.png)
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. click "bitcoin" to buy some gas; this will open a modal window
+1. select 100, 200, or enter a number of satoshis to buy gas
+  * this will open the Buyer's Yours Wallet and prompt the user to sign the transaction
+  * after clicking 'sign transaction', an alert message will be displayed showing the txid of the deployed contract
+1. select an octane of gas
+1. click 'Start' to start pumping gas, and click 'Stop' when done pumping
+1. click 'Complete' to finalize the transaction and get your change
+1. Done! You're all gassed up!
