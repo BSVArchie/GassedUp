@@ -70,7 +70,6 @@ const App: React.FC = () => {
   }
 
   const preAuthorizationTx = async () => {
-
       const provider = new DefaultProvider({
         network: bsv.Networks.testnet
       })
@@ -83,7 +82,7 @@ const App: React.FC = () => {
       if (!isAuthenticated) {
         alert(`Buyer's Yours wallet is not connected: ${error}`)
       } else {
-        const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
+        // const gassStationAddr = PubKeyHash('02eec213d43ed5be4f73af118aa5b71cad2451c674dc09375a141bab85cf2b3ab7')
 
         const buyerPubKey = PubKey(toHex(await signer.getDefaultPubKey()))
         const buyerAddress = pubKey2Addr(buyerPubKey)
@@ -95,8 +94,8 @@ const App: React.FC = () => {
         try {
           instance.deploy(amount).then((result) => {
             setCurrentTxId(result.id)
-            console.log(`Deployed Contract: ${result.id}`)
-            alert(`Deployed Pre-authContract: ${result.id}`)
+            console.log(`Deployed Pre-auth Contract: ${result.id}`)
+            alert(`Deployed Pre-auth Contract: ${result.id}`)
             setOpen(false)
           })
         } catch (error) {
