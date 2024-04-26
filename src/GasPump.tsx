@@ -128,8 +128,23 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
 
     return (
       <>
-        <Container sx={{ display: "flex", justifyContent: "center", flexDirection: "column", flexWrap: "wrap", width: "88%" }}>
-          <Container sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", width: "66%" }}>
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            flexWrap: "wrap",
+            width: "88%",
+          }}
+        >
+          <Container
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              width: "66%",
+            }}
+          >
             <Box
               sx={{
                 border: "2px solid black",
@@ -220,28 +235,54 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
         </Container>
 
         <Container sx={{ justifyContent: "center", display: "flex", p: 0.03 }}>
-          <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
-            <Box sx={{ border: '2px solid black'}}>
-              <Typography variant='h5'sx={{ p: 2}}>
+          <Box
+            sx={{
+              backgroundColor: "#FF6688",
+              border: "4px solid black",
+              display: "flex",
+              flexDirection: "column",
+              m: 3,
+              width: 200,
+              height: 260,
+            }}
+          >
+            <Box sx={{ background: "white" }}>
+              <Typography
+                variant="h5"
+                sx={{ p: 2, "font-family": "monospace", "font-size": "1rem" }}
+              >
                 10 Sats
               </Typography>
             </Box>
             <Typography variant="h4" sx={{ p: 2 }}>
               Regular
             </Typography>
-            <Typography variant="h3">89</Typography>
+            <Typography variant="h3">87</Typography>
             <Button
               variant="contained"
               sx={{ m: 2, bgcolor: "black", "&:hover": { bgcolor: "black" } }}
               disabled={areButtonsDisabled}
               onClick={() => setPrice(10)}>
-                Select
+              Select
             </Button>
           </Box>
 
-          <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
-            <Box sx={{ border: '2px solid black'}}>
-              <Typography variant='h5'sx={{ p: 2}}>
+          <Box
+            sx={{
+              backgroundColor: "#D7D7D7",
+              border: "4px solid black",
+              display: "flex",
+              flexDirection: "column",
+              m: 3,
+              width: 200,
+              height: 260,
+            }}
+          >
+            <Box sx={{ background: "white" }}>
+              <Typography
+                variant="h5"
+                sx={{ p: 2, "font-family": "monospace", "font-size": "1rem" }}
+              >
                 20 Sats
               </Typography>
             </Box>
@@ -254,13 +295,26 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
               sx={{ m: 2, bgcolor: "black", "&:hover": { bgcolor: "black" } }}
               disabled={areButtonsDisabled}
               onClick={() => setPrice(20)}>
-                Select
+              Select
             </Button>
           </Box>
 
-          <Box sx={{ backgroundColor: 'gold', border: '4px solid black', display: 'flex', flexDirection: 'column', p: 1, m: 3, width: 200, height: 260 }}>
-            <Box sx={{ border: '2px solid black'}}>
-              <Typography variant='h5'sx={{ p: 2}}>
+          <Box
+            sx={{
+              backgroundColor: "#558FFF",
+              border: "4px solid black",
+              display: "flex",
+              flexDirection: "column",
+              m: 3,
+              width: 200,
+              height: 260,
+            }}
+          >
+            <Box sx={{ background: "white" }}>
+              <Typography
+                variant="h5"
+                sx={{ p: 2, "font-family": "monospace", "font-size": "1rem" }}
+              >
                 30 Sats
               </Typography>
             </Box>
@@ -273,7 +327,7 @@ const GasPump: React.FC<GasPumpProps> = ({ currentTxId, amount }) => {
               sx={{ m: 2, bgcolor: "black", "&:hover": { bgcolor: "black" } }}
               disabled={areButtonsDisabled}
               onClick={() => setPrice(30)}>
-                Select
+              Select
             </Button>
           </Box>
         </Container>

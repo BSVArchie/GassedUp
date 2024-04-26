@@ -33,7 +33,7 @@ This scenario (or business process) involves two actors:
 1. ensure Yours Wallet is installed in your browser (set it to testnet mode)
 1. ensure Sensilet Wallet is installed in your browser (set it to testnet mode too)
 1. export your testnet Sensilet Wallet private key and copy it into `getPubKey.js`
-  * then run `npm getPubKey.js` to get a public key (this key will be used as the Public Key for the Gas Pump)
+  * then run `node getPubKey.js` to get a public key (this key will be used as the Public Key for the Gas Pump)
   * copy the Public Key into the `/src/contracs/GassedUp.ts` Smart Contract
   * run `npx scrypt-cli compile` to compile the smart contract into the `/artifacts` directory
 1. Finally, run `npm start` to start a web server serving a React App that will use the GassedUp bitcoin smart contract
