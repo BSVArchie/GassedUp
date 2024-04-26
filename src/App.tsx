@@ -107,67 +107,127 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Container sx={{ "background": "#F4F4F4", "margin-top": "1rem", border: '6px solid black', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', m: 1 }}>
-          <Typography variant='h2' sx={{ m: 2 }}>
+      <Container
+        sx={{
+          background: "#F4F4F4",
+          "margin-top": "1rem",
+          border: "6px solid black",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "center", m: 1 }}>
+          <Typography variant="h2" sx={{ m: 2 }}>
             Gassed Up
           </Typography>
           <Box sx={{}}>
-            <Token/>
+            <Token />
           </Box>
         </Box>
-        <Box  width='80%' sx={{ border: '3px solid black', display: 'flex', flexDirection: 'column', justifyContent: 'center', m: 'auto', p: 1 }}>
-          <Box sx={{p: 1}}>{currentTxId.length > 0 ? `Current TxId: ${currentTxId}`: 'Please select payment method'}</Box>
-          <Box width='80%' sx={{ display: 'flex', justifyContent: 'center', padding: '0.25rem', textAlign: 'left', m: 'auto' }}>
-            <Box>
-              <ol>
-                <li>
-                  Connect Yours Wallet to pay with Bitcoin
-                </li>
-                <li>
-                  Get pre-authorized for 200 Sats of gas
-                </li>
-                <li>
-                  Select which gas octane
-                </li>
-                <li>
-                  Press START to begin pumping
-                </li>
-                <li>
-                  Press STOP to finish pumping
-                </li>
-                <li>
-                  Press FINISH to complete transaction
-                </li>
-              </ol>
-            </Box>
-            <Container sx={{ width: '30%', display: 'flex', flexDirection: 'column'}}>
-              <Button variant="contained" sx={{ m: 1, bgcolor: 'green', "&:hover": { bgcolor: 'green' } }} onClick={() => handleCash()}>Cash</Button>
-              <Button variant="contained" sx={{ m: 1 }} onClick={() => handleCard()}>Visa</Button>
-              <Button
-                onClick={openModel}
-                variant="contained"
-                sx={{ m: 1, bgcolor: '#EAB300', "&:hover": { bgcolor: '#EEC233' } }}>
-                Bitcoin
-              </Button>
-
-              <Dialog open={open} fullWidth>
-                <DialogTitle sx={{ p: 1 }}>Select Pre-pay amount or enter a custom amount</DialogTitle>
-                <Box>
-                  <Button onClick = {preAuthorize100} variant='contained' sx={{ width: '20%', m: 1 }}>100 Sats</Button>
-                  <Button onClick = {preAuthorize200} variant='contained' sx={{ width: '20%', m: 1 }}>200 Sats</Button>
-                  <TextField onChange = { e => setCustomAmount(Number(e.target.value))} label="Satoshis"></TextField>
-                </Box>
-                  <DialogActions>
-                    <Button onClick = {preAuthorizeCustom} color='success' variant='contained' sx={{ width: '20%', m: 1 }}>Pre-auth</Button>
-                    <Button onClick = {cancel} color='error' variant='contained' sx={{ width: '20%', m: 1 }} >Cancel</Button>
-                  </DialogActions>
-              </Dialog>
-            </Container>
-
-          </Box>
+        <Box sx={{ p: 1 }}>
+          {currentTxId.length > 0
+            ? `Current TxId: ${currentTxId}`
+            : "Please select payment method"}
         </Box>
-        <GasPump currentTxId={currentTxId} amount={amount}/>
+        <Box
+          width="80%"
+          sx={{
+            border: "3px solid black",
+            background: "white",
+            color: "#666666",
+            display: "flex",
+            justifyContent: "center",
+            padding: "0.25rem",
+            textAlign: "left",
+            m: "auto",
+          }}
+        >
+          <Box>
+            <ol>
+              <li>Select Bitcoin, and connect Yours Wallet</li>
+              <li>Get pre-authorized for 200 Sats of gas</li>
+              <li>Select which gas octane</li>
+              <li>Press START to begin pumping</li>
+              <li>Press STOP to finish pumping</li>
+              <li>Press FINISH to complete transaction</li>
+            </ol>
+          </Box>
+          <Container
+            sx={{ width: "30%", display: "flex", flexDirection: "column" }}
+          >
+            <Button
+              variant="contained"
+              sx={{ m: 1, bgcolor: "green", "&:hover": { bgcolor: "green" } }}
+              onClick={() => handleCash()}
+            >
+              Cash
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ m: 1 }}
+              onClick={() => handleCard()}
+            >
+              Credit card
+            </Button>
+            <Button
+              onClick={openModel}
+              variant="contained"
+              sx={{
+                m: 1,
+                bgcolor: "#EAB300",
+                "&:hover": { bgcolor: "#EEC233" },
+              }}
+            >
+              Bitcoin
+            </Button>
+
+            <Dialog open={open} fullWidth>
+              <DialogTitle sx={{ p: 1 }}>
+                Select Pre-pay amount or enter a custom amount
+              </DialogTitle>
+              <Box>
+                <Button
+                  onClick={preAuthorize100}
+                  variant="contained"
+                  sx={{ width: "20%", m: 1 }}
+                >
+                  100 Sats
+                </Button>
+                <Button
+                  onClick={preAuthorize200}
+                  variant="contained"
+                  sx={{ width: "20%", m: 1 }}
+                >
+                  200 Sats
+                </Button>
+                <TextField
+                  onChange={(e) => setCustomAmount(Number(e.target.value))}
+                  label="Satoshis"
+                ></TextField>
+              </Box>
+              <DialogActions>
+                <Button
+                  onClick={preAuthorizeCustom}
+                  color="success"
+                  variant="contained"
+                  sx={{ width: "20%", m: 1 }}
+                >
+                  Pre-auth
+                </Button>
+                <Button
+                  onClick={cancel}
+                  color="error"
+                  variant="contained"
+                  sx={{ width: "20%", m: 1 }}
+                >
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Container>
+        </Box>
+        <GasPump currentTxId={currentTxId} amount={amount} />
       </Container>
     </div>
   );
